@@ -1,0 +1,52 @@
+---
+import {BaseService} from "@services/base.service";
+import Pagination from "@components/pagination.svelte";
+import {IWpGenericTaxonomy} from "@models/general";
+import {arrayPaginator, IArrayPaginator} from "@helpers/paginate-array";
+import {IGenericWpObject} from "@models/general";
+import Layout from "@layouts/default.astro";
+
+export async function getStaticPaths() {
+    const per_page = 34;
+    const service = new BaseService();
+
+    let allItems = await service.load(`tech`);
+    allItems = allItems.filter((item: IGenericWpObject) => item.acf['paid']);
+
+    const firstPage = arrayPaginator<IGenericWpObject>(allItems, 1, per_page);
+    const all = [];
+
+    for (let idx = 0; idx < firstPage.totalPages; idx++) {
+        const paginated = arrayPaginator<IGenericWpObject>(allItems, idx+1, per_page);
+        all.push({
+            params: {
+                page: idx === 0 ? undefined : (idx + 1).toString(),
+            },
+            props: {
+                items: paginated.data,
+                paginated,
+            }
+        });
+    }
+
+    return all;
+}
+
+const {items, paginated}: { items: IGenericWpObject[], paginated: IArrayPaginator<IGenericWpObject> } = Astro.props;
+const page = await new BaseService().getPostObjectByProperty('page', 'acf.template.slug','featured-techs') as IGenericWpObject;
+const seo = {
+    title: page.yoast_head_json.title,
+    description: page.yoast_head_json.description,
+}
+---
+<Layout {seo}>
+    {paginated.data.map((item) => (
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="card">
+                    <div class="card-body">
+                        <a href={`/tech/${item.slug}`} class="card-title">{item.title.rendered}</a>
+                    </div>
+                </div>
+            </div>
+    ))}
+</Layout>

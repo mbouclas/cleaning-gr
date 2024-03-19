@@ -1,6 +1,6 @@
 <script lang="ts">
 
-    let show = $state(false);
+    let show = false;
 
 
     function handleBackdropClick() {
@@ -11,15 +11,15 @@
         show = !show;
     }
 </script>
-<button onclick={toggle} class="flex gap-2.5 my-4">
+<button on:click={toggle} class="flex gap-2.5 my-4">
     <slot name="button">Toggle</slot>
 </button>
 {#if show}
-<div id="backdrop" class="fixed z-50 inset-0 bg-gray-500 bg-opacity-25 transition-opacity" onclick={handleBackdropClick}></div>
+<div id="backdrop" class="fixed z-50 inset-0 bg-gray-500 bg-opacity-25 transition-opacity" on:click={handleBackdropClick}></div>
 {/if}
 <div id="drawer-navigation"
      class:block={show} class:hidden={!show} class:slide-right={show} class:slide-left={!show}
-     class="fixed top-0 left-0 z-50 h-screen p-4 overscroll-contain overflow-y-auto w-80 dark:bg-gray-800">
+     class="fixed top-0 left-0 z-50 h-screen p-4 overscroll-contain overflow-y-auto w-80 bg-gray-800">
     <h5 id="drawer-navigation-label" class="text-base font-semibold text-gray-500 uppercase dark:text-gray-400">
         <slot name="title">Menu</slot>
     </h5>

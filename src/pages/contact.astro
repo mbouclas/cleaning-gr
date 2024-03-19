@@ -1,0 +1,9 @@
+
+---
+import {BaseService} from "../services/base.service";
+import Layout from "@layouts/default.astro";
+
+const seo = await new BaseService().getSectionSeo('contact');
+---
+<Layout {seo}>
+</Layout>

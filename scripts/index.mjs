@@ -16,12 +16,13 @@ import fs from "fs";
 import { writeFile } from "fs/promises";
 import {join, dirname, resolve} from "path";
 import { fileURLToPath } from "url";
-import {CarsService} from "./cars.service.mjs";
 import {MenuService} from "./menu.service.mjs";
 import {FieldsService} from "./fields.service.mjs";
 import {PostsService} from "./posts.service.mjs";
 import {PagesService} from "./pages.service.mjs";
 import {OptionsPagesService} from "./optionsPages.service.mjs";
+import {BaseService} from "./base.service.mjs";
+import {PostProcessing} from "./postProcessing.mjs";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -42,16 +43,16 @@ if (!fs.existsSync(cacheFolderLocation)) {
 
 const timeStart = Date.now();
 Promise.all([
-    saveTaxonomies(),
     saveMenus(),
+    saveTaxonomies(),
     saveAcfGroups(),
-    saveAllPosts(),
-    saveAllPages(),
+    saveAllContent(),
     saveOptionsPages(),
-    saveGroupedObjects(),
 ])
     .then(async () => {
-        await new CarsService().postProcessing(cacheFolderLocation);
+
+
+        // await new CarsService().postProcessing(cacheFolderLocation);
     })
     .then(() => {
     console.log(`* All done in ${Date.now() - timeStart}ms`);
@@ -59,7 +60,7 @@ Promise.all([
 });
 
 async function saveTaxonomies() {
-    const s = new CarsService();
+    const s = new BaseService();
     const taxonomies = await s.getTaxonomies();
     for (const key in taxonomies) {
         const items = taxonomies[key].terms;
@@ -79,7 +80,7 @@ async function saveTaxonomies() {
 
 async function saveMenus() {
     const s = new MenuService();
-    const items = await s.getMenus();
+    const items = await (new PostProcessing(cacheFolderLocation)).menus(await s.getMenus());
     try {
         await writeFile(
             join(cacheFolderLocation, `all_menus.json`),
@@ -136,6 +137,12 @@ async function saveAcfGroups() {
     }
 }
 
+async function saveAllContent() {
+    const s = new BaseService();
+    await s.saveAllPosts(cacheFolderLocation);
+    console.log(`* Saving All content complete`)
+}
+
 async function saveAllPosts() {
     const s = new PostsService();
     const items = await s.getPosts();
@@ -164,35 +171,6 @@ async function saveAllPages() {
     }
 }
 
-async function saveGroupedObjects() {
-    const s = new CarsService();
-    const byMake = await s.groupByMake();
-    const byModel = await s.groupByModel();
-
-    for (const key in byMake) {
-        try {
-            await writeFile(
-                join(cacheFolderLocation, `make_${key}.json`),
-                JSON.stringify(byMake[key])
-            )
-            console.log(`* Saving All ${key} complete`)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    for (const key in byModel) {
-        try {
-            await writeFile(
-                join(cacheFolderLocation, `model_${key}.json`),
-                JSON.stringify(byModel[key])
-            )
-            console.log(`* Saving All ${key} complete`)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-}
 
 async function saveOptionsPages() {
     const s = new OptionsPagesService();

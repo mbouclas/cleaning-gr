@@ -4,7 +4,9 @@ export class PagesService extends BaseService {
     async getPages(limit = 10) {
         let allPages = [];
 
-        const res = await fetch(`${this.wpUrl}pages?limit=${limit}&acf_format=standard`);
+        const res = await fetch(`${this.wpUrl}pages?limit=${limit}&acf_format=standard`, {
+            headers: this.authHeaders()
+        });
         const data = await res.json();
         const totalPages = res.headers.get(this.totalPagesHeaderParam);
         const totalItems = res.headers.get(this.totalItemsHeaderParam);

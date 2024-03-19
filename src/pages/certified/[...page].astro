@@ -1,0 +1,93 @@
+---
+import {BaseService} from "@services/base.service";
+import Pagination from "@components/pagination.svelte";
+import {IWpGenericTaxonomy} from "@models/general";
+import {arrayPaginator, IArrayPaginator} from "@helpers/paginate-array";
+import {IGenericWpObject} from "@models/general";
+import Layout from "@layouts/default.astro";
+
+export async function getStaticPaths() {
+    const per_page = 12;
+    const service = new BaseService();
+
+    const allItems = await service.load(`tech`);
+
+    const firstPage = arrayPaginator<IGenericWpObject>(allItems, 1, per_page);
+    const all = [];
+
+    for (let idx = 0; idx < firstPage.totalPages; idx++) {
+        const paginated = arrayPaginator<IGenericWpObject>(allItems, idx+1, per_page);
+        all.push({
+            params: {
+                page: idx === 0 ? undefined : (idx + 1).toString(),
+            },
+            props: {
+                items: paginated.data,
+                paginated,
+            }
+        });
+    }
+
+    return all;
+}
+
+const {items, paginated}: { items: IGenericWpObject[], paginated: IArrayPaginator<IGenericWpObject> } = Astro.props;
+const page = await new BaseService().getPostObjectByProperty('page', 'acf.template.slug','certified-techs') as IGenericWpObject;
+const seo = {
+    title: page.yoast_head_json.title,
+    description: page.yoast_head_json.description,
+}
+const service = new BaseService();
+const allCertifications = await service.load(`certification`);
+
+---
+<Layout {seo}>
+
+
+    <div class="relative overflow-x-auto">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Όνομα
+                </th>
+                {allCertifications.map((certification) => (
+                    <th scope="col" class="px-6 py-3">
+                        {certification.name}
+                    </th>
+                ))}
+
+
+            </tr>
+            </thead>
+            <tbody>
+            {paginated.data.map((item) => (
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    <a href={`/tech/${item.slug}`} class="hover:underline">{item.title.rendered}</a>
+                </th>
+
+                {allCertifications.map((certification) => (
+                        <td class="px-6 py-4">
+                            {item.acf.certification.indexOf(certification.id) !== -1 && (
+                                    <svg class="text-green-400 w-6 h-6"
+                                            xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275q-.275.275-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7q-.275-.275-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22"/></svg>
+                            )}
+                        </td>
+                ))}
+            </tr>
+            ))}
+            </tbody>
+        </table>
+    </div>
+
+    {paginated.data.map((item) => (
+            <div class="col-md-4 col-sm-6 col-xs-12">
+                <div class="card">
+                    <div class="card-body">
+                        <a href={`/tech/${item.slug}`} class="card-title">{item.title.rendered}</a>
+                    </div>
+                </div>
+            </div>
+    ))}
+</Layout>

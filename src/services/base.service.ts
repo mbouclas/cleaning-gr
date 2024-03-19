@@ -1,5 +1,7 @@
 import {readFile} from "fs/promises";
 import type {IAcfField} from "@models/general.ts";
+import pkg from 'lodash';
+const {find, filter} = pkg;
 
 export class BaseService {
     public async load(filename: string) {
@@ -24,5 +26,40 @@ export class BaseService {
         }
 
         return acfField;
+    }
+
+    public async getAcfFieldValue(key: string): Promise<any> {
+        const siteSettings = await this.getSiteSettings();
+        const field = this.getAcfField(key, siteSettings);
+        if (!field || !field.value) {
+            return null;
+        }
+
+        return field.value;
+    }
+
+    public async getSectionSeo(section: string){
+        const siteSettings = await this.getSiteSettings();
+        const field = this.getAcfField('seo_defaults', siteSettings);
+        if (!field || !field.value || !field.value['pages_seo']) {
+            return null;
+        }
+
+        return field.value['pages_seo'].find((item) => item.section === section);
+    }
+
+    public async getPostObjectByProperty(type: string, property: string, value: string) {
+        const items = await this.load(type);
+
+        const item = find(items, [property, value]);
+
+        return item;
+    }
+
+    public async filterPostObjectsByProperty(type: string, property: string, value: string) {
+        const items = await this.load(type);
+
+        return filter(items, [property, value]);
+
     }
 }

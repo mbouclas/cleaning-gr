@@ -2,21 +2,17 @@
     import type {IAcfField} from "@models/general.ts";
     import {z} from "zod";
     import Fields from "@components/form-fields.svelte";
+    import {onMount} from "svelte";
 
-
-    interface IProps {
-        fields: IAcfField[];
-        level?: number;
-    }
-
-    let { fields, level = 0 } = $props<IProps>();
+    export let fields: IAcfField[] = [],
+        level = 0;
     let schema;
     let model = {};
-    let errors = $state({});
-    let ready = $state(false);
-    let success = $state(false);
+    let errors = {};
+    let ready = false;
+    let success = false;
 
-    $effect(() => {
+    onMount(() => {
             schema = z.object({});
             fields.forEach(field => {
                 if (field.type === 'group' && Array.isArray(field.sub_fields)) {

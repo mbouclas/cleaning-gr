@@ -14,7 +14,7 @@
       "@data/*": ["src/data/*"],
       "@models/*": ["src/models/*"],
       "@stores/*": ["src/stores/*"],
-      "@scripts/*": ["src/scripts/*"]
+      "@scripts/*": ["src/scripts/*"],
     }
   }
 }

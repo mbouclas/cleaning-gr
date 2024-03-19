@@ -1,0 +1,42 @@
+---
+import {BaseService} from "@services/base.service";
+import {IGenericWpObject} from "@models/general";
+import Layout from "@layouts/default.astro";
+interface Props {
+    item: IGenericWpObject;
+}
+
+export async function getStaticPaths() {
+    const items = await new BaseService().load('post');
+    let all = [];
+
+    for (let idx = 0; idx < items.length; idx++) {
+        all.push({
+            params: {
+                slug: items[idx].slug
+            },
+            props: {
+                item: items[idx]
+            }
+        });
+    }
+
+    return all;
+}
+
+const {item}: Props = Astro.props;
+
+const seo = {
+    title: item?.yoast_head_json?.title || item.title.rendered,
+    description: item?.yoast_head_json?.description || item.title.rendered,
+}
+---
+<Layout {seo}>
+    <div class="max-w-7xl mx-auto w-full">
+        <div class="my-4 px-4 md:px-0">
+            <h1 class=" font-sans font-light text-5xl ltablet:text-5xl lg:text-5xl leading-none mb-2 text-muted-800 dark:text-white">
+                {item.title.rendered}
+            </h1>
+        </div>
+    </div>
+</Layout>

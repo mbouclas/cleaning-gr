@@ -1,0 +1,20 @@
+---
+const {title} = Astro.props as {title: string};
+
+---
+
+<section class="relative flex justify-center items-center overflow-hidden -translate-y-16 pb-20">
+    <div class=" w-full sm:container relative">
+        <div class="relative bg-white shadow p-12 rounded-md">
+
+            <div class="flex items-center justify-center max-w-3xl mx-auto">
+                <div class="text-center">
+                    <h1 class="font-light text-[34px] tracking-[1px] leading-[54px] mb-2">
+                        {title}
+                    </h1>
+                </div>
+            </div>
+<slot></slot>
+        </div>
+    </div>
+</section>

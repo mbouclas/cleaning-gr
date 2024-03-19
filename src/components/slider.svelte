@@ -1,10 +1,11 @@
 <script lang="ts">
     import Swiper from 'swiper';
     import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+    import {onMount} from "svelte";
     // import Swiper styles
     // let { width = 100, height = 50 } = $props<{width: number, height: number}>();
 
-    $effect(() => {
+    onMount(() => {
         Swiper.use([Navigation, Pagination, Autoplay]);
             const progressCircle = document.querySelector(".autoplay-progress svg");
             const progressContent = document.querySelector(".autoplay-progress span");

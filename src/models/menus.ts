@@ -1,3 +1,5 @@
+import type {IGenericObject} from "@models/general.ts";
+
 export interface IWPGenericMenu {
     term_id: number;
     name: string;
@@ -49,4 +51,5 @@ export interface IWpGenericMenuItem {
     description: string;
     classes?: string[] | null;
     xfn: string;
+    acf: IGenericObject;
 }

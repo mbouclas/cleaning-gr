@@ -4,7 +4,9 @@ export class PostsService extends BaseService {
     async getPosts(limit = 10) {
         let allPosts = [];
 
-        const res = await fetch(`${this.wpUrl}posts?limit=${limit}&acf_format=standard`);
+        const res = await fetch(`${this.wpUrl}posts?limit=${limit}&acf_format=standard`, {
+            headers: this.authHeaders()
+        });
         const data = await res.json();
         const totalPages = res.headers.get(this.totalPagesHeaderParam);
         const totalItems = res.headers.get(this.totalItemsHeaderParam);

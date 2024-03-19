@@ -1,0 +1,6 @@
+.container {
+    @apply w-auto mx-auto;
+    padding-right: 13rem;
+    padding-left: 13rem;
+}
+

@@ -1,8 +1,13 @@
 ---
+import {BaseService} from "@services/base.service";
+import type {IWPGenericMenu} from "@models/menus";
 import { SEO } from "astro-seo"
 import Header from "@components/header.svelte";
 import Footer from "@components/footer.astro";
 import {config} from "@data/config";
+import '@assets/custom.css'
+import {svgIcon} from "@helpers/general";
+import {stripDomainFromWpUrl} from "@helpers/menus";
 
 const { title = config.seo.defaults.title, seo = {} } = Astro.props;
 
@@ -11,9 +16,14 @@ if (!seo.title) {
 }
 seo.og_title = seo.og_title || seo.title;
 seo.og_description = seo.og_description || seo.description;
+const service = new BaseService();
+const allMenus = await service.load('all_menus') as IWPGenericMenu[];
+const topMenu = allMenus.find(menu => menu.slug === 'top-menu') as IWPGenericMenu;
+const currentUrl = Astro.url.pathname;
+const logo = await service.getAcfFieldValue('logo')
 
 ---
-<html lang="en" class="bg-ebony dark">
+<html>
 <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/businesslink/image/upload/v1703153059/quality-cars/quality-cars-logo-2_xzfulb.svg" />
@@ -32,9 +42,22 @@ seo.og_description = seo.og_description || seo.description;
         }
     </style>
 </head>
-<body class="text-muted-200">
-<Header client:idle />
+<body>
+<Header client:idle>
+
+    <span slot="logo" set:html={svgIcon(logo, 'w-36 h-36')}></span>
+    <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
+        {topMenu.items.map(item => (
+            <li class="block py-2 pr-4 pl-3 text-white rounded  lg:bg-transparent lg:text-primary-700 lg:p-0">
+                <a class={`${currentUrl === item.url ? 'text-primary-500 underline' : ''} hover:text-primary-500`}
+                    href={stripDomainFromWpUrl(item)}>{item.title}</a>
+            </li>
+        ))}
+    </ul>
+</Header>
+
 <slot></slot>
+
 <Footer />
 </body>
 </html>

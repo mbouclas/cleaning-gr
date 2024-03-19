@@ -24,6 +24,16 @@ export function stripDomainFromWpUrl(menuItem: IWpGenericMenuItem) {
     }
     //remove the http:// or https:// from the url
 
+    if (prefix === 'custom') {
+        return menuItem.url;
+    }
+
+    if (menuItem.acf && menuItem.acf.slug) {
+        return (menuItem.acf.slug.charAt(0) !== '/') ? `/${menuItem.acf.slug}` : menuItem.acf.slug;
+    }
+
+
+
     const url = new URL(menuItem.url);
     return `/${prefix}/${url.pathname.replace(/^\/+|\/+$/g, '')}`;
 }

@@ -1,12 +1,11 @@
 <script lang="ts">
     import type {IAcfField} from "@models/general.ts";
 
-    interface IProps {
-        fields: IAcfField[];
-        level?: number;
-        errors?: Record<string, string>;
-    }
-    let { fields, level = 0, errors  } = $props<IProps>();
+
+    export let fields: IAcfField[];
+    export let level = 0;
+    export let errors: Record<string, string> = {};
+
 
     // $effect(() => console.log(fields))
 

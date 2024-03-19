@@ -17,11 +17,12 @@ export interface IGenericWpObject {
     link: string;
     title: Title;
     content: Content;
-    featured_media: number|IWpMedia;
+    featured_media: IWpMedia;
     template: string;
     acf: IGenericObject;
     yoast_head: string;
     yoast_head_json: YoastHeadJson;
+    excerpt: Excerpt;
 }
 export interface Guid {
     rendered: string;
@@ -29,6 +30,11 @@ export interface Guid {
 export interface Title {
     rendered: string;
 }
+
+export interface Excerpt {
+    rendered: string;
+}
+
 export interface Content {
     rendered: string;
     protected: boolean;
@@ -129,7 +135,7 @@ export interface IAcfField {
     prefix: string;
     type: 'text'|'textarea'|'select'|'number'|'email'|'url'|'group'|'tab'|'repeater';
     sub_fields?: IAcfField[];
-    value?: null;
+    value?: any;
     menu_order: number;
     instructions: string;
     required: number;
