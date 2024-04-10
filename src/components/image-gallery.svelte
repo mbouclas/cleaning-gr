@@ -1,8 +1,9 @@
 <script lang="ts">
 
     import 'glightbox/dist/css/glightbox.min.css';
+    import {onMount} from "svelte";
 
-    $effect(async () => {
+    onMount(async () => {
         if (!window) {
             return;
         }

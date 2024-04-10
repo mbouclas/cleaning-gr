@@ -1,4 +1,20 @@
 import {config} from "@data/config.ts";
+import type {IWpMedia} from "@models/media.ts";
+
+export function f(item: IWpMedia, settings: string) {
+    if (!item) {
+        return config.defaultNoImage;
+    }
+
+    if (item && item.cloudinary) {
+        return cloudinaryRawSettings(item.cloudinary.url, settings);
+    }
+
+    // remove any w_ or h_ settings
+    const src = item.source_url.replace(/(w_\d+,|h_\d+,)/g, '');
+
+    return cloudinaryRawSettings(src, settings);
+}
 
 export function cloudinaryRawSettings(src: string, settings: string) {
     if (!src) {

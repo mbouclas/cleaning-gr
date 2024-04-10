@@ -2,6 +2,9 @@
 import {BaseService} from "@services/base.service";
 import {IGenericWpObject} from "@models/general";
 import Layout from "@layouts/default.astro";
+import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
+import Gallery from '@components/image-gallery.svelte';
+import Container from "@components/container-with-shadow.astro";
 interface Props {
     item: IGenericWpObject;
 }
@@ -31,32 +34,90 @@ const seo = {
     title: item?.yoast_head_json?.title || item.title.rendered,
     description: item?.yoast_head_json?.description || item.title.rendered,
 }
+
+let gallery = [];
+if (typeof item.acf.gallery === 'object') {
+    gallery = item.acf.gallery;
+}
+
 ---
 <Layout {seo}>
-
-    <section class="relative table w-full py-20 lg:py-24 bg-gray-50 dark:bg-slate-800">
-        <div class="container relative">
-            <div class="grid grid-cols-1 mt-14">
-                <h3 class="text-3xl leading-normal font-semibold">
-                    {item.title.rendered}
-                    / Item Detail</h3>
-            </div><!--end grid-->
-
-            <div class="relative mt-3">
-                <ul class="tracking-[0.5px] mb-0 inline-block">
-                    <li class="inline-block uppercase text-[13px] font-bold duration-500 ease-in-out hover:text-indigo-600"><a href="index-shop.html">Techwind</a></li>
-                    <li class="inline-block text-base text-slate-950 dark:text-white mx-0.5 ltr:rotate-0 rtl:rotate-180"><i class="uil uil-angle-right-b"></i></li>
-                    <li class="inline-block uppercase text-[13px] font-bold text-indigo-600" aria-current="page">Item Detail</li>
-                </ul>
-            </div>
-        </div><!--end container-->
-    </section><!--end section-->
-
-    <div class="max-w-7xl mx-auto w-full">
-        <div class="my-4 px-4 md:px-0">
-            <h1 class=" font-sans font-light text-5xl ltablet:text-5xl lg:text-5xl leading-none mb-2 text-muted-800 dark:text-white">
-                {item.title.rendered}
-            </h1>
+    <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+        {item.featured_media && (
+                <img
+                        src={cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                        srcset={`
+                                   ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                                   ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                                   ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                                   `}
+                        sizes="(max-width: 1920px) 100vw, 1920px"
+                        alt={item?.featured_media?.alt_text || item.title.rendered}
+                        title={item?.featured_media?.title?.rendered ||item.title.rendered}
+                        width="1920" height="750"
+                        class="absolute inset-0 -z-10 h-full w-full object-cover">
+        )}
+        <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
+            <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+        </div>
+        <div class="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
+            <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+        </div>
+        <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">{item.title.rendered}</h2>
         </div>
     </div>
+    <Container title={item.title.rendered}>
+    <div class="max-w-7xl mx-auto w-full">
+        <div class="my-4 px-4 md:px-0">
+
+            <div set:html={item.content.rendered}> </div>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="space-y-2.5 relative">
+            <img src={cloudinaryRawSettings(item.featured_media.source_url, 'c_thumb,h_350,w_600,z_1/q_auto:good/f_webp/dpr_auto')}
+                 class="block w-full max-w-xl ltablet:max-w-3xl lg:max-w-3xl mx-auto ptablet:mt-8"
+                 width="900"
+                 height="506"
+                 decoding="async"
+                 alt={item?.featured_media?.alt_text || item.title.rendered}
+                 title={item?.featured_media?.title?.rendered ||item.title.rendered}
+            >
+        </div>
+
+        <div id="Gallery">
+            {gallery.length > 0 && (
+                    <div class="max-w-3xl">
+                        <!--Images-->
+                        <Gallery client:idle>
+                            <div class="grid grid-cols-3 gap-4 mb-6">
+                                {gallery.map((image,idx) => (
+                                        <a
+                                                href={cloudinaryRawSettings(image.source_url, 'q_auto:best/f_webp/dpr_auto')}
+                                                data-zoomable="true"
+                                                class:list={[
+                                                    " gallery",
+                                                ]}
+                                                data-title={image.title.rendered}
+                                        >
+                                            <img class={`col-span-${idx === 0 ? '12' : '6'}`} src={cloudinaryRawSettings(image.source_url, 'c_thumb,h_250,w_350,z_1/q_auto:good/f_webp/dpr_auto')}
+                                                 alt={image.alt || ''} title={image.title.rendered || ''}
+                                                 width="350"
+                                                 height="350"
+                                                 loading="lazy"
+                                                 decoding="async"
+                                            >
+
+                                        </a>
+                                ))}
+
+
+                            </div>
+                        </Gallery>
+                    </div>
+            )}
+        </div>
+    </div>
+    </Container>
 </Layout>

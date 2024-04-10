@@ -1,6 +1,25 @@
-.container {
-    @apply w-auto mx-auto;
-    padding-right: 13rem;
-    padding-left: 13rem;
+
+p {
+    @apply leading-relaxed;
 }
 
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    @apply leading-normal;
+}
+
+::selection {
+    @apply bg-indigo-600/90 text-white;
+}
+
+.underline-animation {
+    @apply relative inline-block;
+}
+
+.underline-animation::after {
+    @apply absolute h-px bg-current bottom-0 left-0 w-0 transition-all duration-200 ease-in-out;
+    content: '';
+}
+
+.underline-animation:hover::after {
+    @apply w-full;
+}

@@ -44,6 +44,7 @@ export default {
 				}
 			}),
 			colors: {
+				'dark-footer': '#192132',
 				primary: {
 					DEFAULT: '#007cb7',
 					'50': '#f0f9ff',

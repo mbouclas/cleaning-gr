@@ -1,0 +1,74 @@
+---
+import {IGenericWpObject} from "@models/general";
+import Layout from "@layouts/default.astro";
+
+import {BaseService} from "@services/base.service";
+import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
+import Container from '@components/container-with-shadow.astro';
+import ImgContainer from '@components/header-with-rounded-image.astro';
+import {svgIcon} from "../helpers/general";
+
+const service = new BaseService();
+const items = await service.load(`publication`);
+const page = await new BaseService().getPostObjectByProperty('page', 'acf.template.slug','publications') as IGenericWpObject;
+const seo = {
+    title: page.yoast_head_json.title,
+    description: page.yoast_head_json.description,
+}
+
+---
+<Layout {seo}>
+
+    <ImgContainer>
+        <Fragment slot="title">{page.title.rendered}</Fragment>
+        <span slot="image">
+            <img
+                    src={cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                    srcset={`
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       `}
+                    sizes="(max-width: 1920px) 100vw, 1920px"
+                    alt={page?.featured_media?.alt_text || page.title.rendered}
+                    title={page?.featured_media?.title?.rendered ||page.title.rendered}
+                    width="1920" height="750"
+                    class="absolute inset-0 -z-10 h-full w-full object-cover">
+    </span>
+        {page.acf.short_description && (
+                <span slot="description">{page.acf.short_description}</span>
+        )}
+
+    </ImgContainer>
+
+    <Container>
+        <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-[30px] my-4">
+            {items.map((item) => (
+                    <div class="group relative rounded-md shadow hover:shadow-lg dark:shadow-gray-800 duration-500 ease-in-out overflow-hidden">
+                        <div class="relative overflow-hidden">
+                            <a href={`/publication/${item.slug}`} title={item.title.rendered}>
+                                <img src={cloudinaryRawSettings(item.featured_media.source_url, 'c_thumb,g_faces:auto,h_180,q_auto:best,w_300')} class="group-hover:scale-110 duration-500 ease-in-out"
+                                     alt={item.featured_media.alt_text || item.title.rendered}
+                                     width="300" height="180" loading="lazy"
+                                >
+
+                                <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 duration-500 ease-in-out"></div>
+
+                            </a>
+                        </div>
+
+                        <div class="content p-6 relative">
+                            <a href={`/publication/${item.slug}`} title={item.title.rendered} class="text-lg font-medium block hover:text-indigo-600 duration-500 ease-in-out mt-2">
+                                {item.title.rendered}
+                            </a>
+
+                            <p class="text-slate-400 mt-3 mb-4">{item.acf.excerpt || ''}</p>
+
+                        </div>
+
+                    </div>
+
+            ))}
+        </div>
+    </Container>
+</Layout>

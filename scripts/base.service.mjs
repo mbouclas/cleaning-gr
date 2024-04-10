@@ -69,6 +69,7 @@ export class BaseService {
         const res = await fetch(`${this.wpUrl}${postType}?limit=${limit}${statusQuery}&acf_format=standard`, {
             headers: this.authHeaders()
         });
+
         const data = await res.json();
         let allPosts = [];
         const totalPages = res.headers.get(this.totalPagesHeaderParam);
@@ -77,10 +78,12 @@ export class BaseService {
         allPosts = allPosts.concat(data);
 
         for (let idx = 1; idx < totalPages; idx++) {
-            const r = await fetch(`${this.wpUrl}${postType}?limit=${limit}${statusQuery}&acf_format=standard&page=${idx + 1}`);
+            const r = await fetch(`${this.wpUrl}${postType}?limit=${limit}${statusQuery}&acf_format=standard&page=${idx + 1}`, {
+                headers: this.authHeaders()
+            });
             const d = await r.json();
-            console.log(`*** ${postType} page ${idx + 1} complete`);
             allPosts = allPosts.concat(d);
+            console.log(`*** ${postType} page ${idx + 1} complete. ${allPosts.length} of ${totalItems} items fetched.`);
         }
 
         const postProcessingService = new PostProcessing(this.cacheFolderLocation);
@@ -103,6 +106,7 @@ export class BaseService {
             }
 
         }
+
         return allPosts;
     }
 

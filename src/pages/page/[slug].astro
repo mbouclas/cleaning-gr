@@ -2,6 +2,9 @@
 import {BaseService} from "@services/base.service";
 import {IGenericWpObject} from "@models/general";
 import Layout from "@layouts/default.astro";
+import Container from '@components/container-with-shadow.astro';
+import ImgContainer from '@components/header-with-rounded-image.astro';
+import {cloudinaryUrlFromRaw} from "@/helpers/cloudinary.helper";
 interface Props {
     item: IGenericWpObject;
 }
@@ -32,11 +35,25 @@ const seo = {
 }
 ---
 <Layout {seo}>
-    <div class="max-w-7xl mx-auto w-full">
-        <div class="my-4 px-4 md:px-0">
-            <h1 class=" font-sans font-light text-5xl ltablet:text-5xl lg:text-5xl leading-none mb-2 text-muted-800 dark:text-white">
-                {item.title.rendered}
-            </h1>
-        </div>
-    </div>
+    <ImgContainer>
+        <Fragment slot="title">{item.title.rendered}</Fragment>
+        <span slot="image">
+            <img
+                    src={cloudinaryUrlFromRaw(item?.featured_media, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                    srcset={`
+                       ${cloudinaryUrlFromRaw(item?.featured_media, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryUrlFromRaw(item?.featured_media, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryUrlFromRaw(item?.featured_media, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       `}
+                    sizes="(max-width: 1920px) 100vw, 1920px"
+                    alt={item?.featured_media?.alt_text || item.title.rendered}
+                    title={item?.featured_media?.title?.rendered ||item.title.rendered}
+                    width="1920" height="750"
+                    class="absolute inset-0 -z-10 h-full w-full object-cover">
+    </span>
+
+    </ImgContainer>
+    <Container>
+        <div class="prose max-w-none" set:html={item.content.rendered} />
+    </Container>
 </Layout>

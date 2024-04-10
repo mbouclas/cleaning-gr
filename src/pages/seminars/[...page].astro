@@ -7,6 +7,7 @@ import {IGenericWpObject} from "@models/general";
 import Layout from "@layouts/default.astro";
 import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
 import Container from '@components/container-with-shadow.astro';
+import ImgContainer from '@components/header-with-rounded-image.astro';
 
 export async function getStaticPaths() {
     const per_page = 12;
@@ -51,32 +52,28 @@ const futureItems = allItems.filter((item: IGenericWpObject) => !item.acf['compl
 const showFuture = (currentPage === 1 || !currentPage);
 ---
 <Layout {seo}>
-    <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-        {page.featured_media && (
-        <img
-                src={cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
-                srcset={`
-                                   ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
-                                   ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
-                                   ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
-                                   `}
-                sizes="(max-width: 1920px) 100vw, 1920px"
-                alt={page?.featured_media?.alt_text || page.title.rendered}
-                title={page?.featured_media?.title?.rendered ||page.title.rendered}
-             class="absolute inset-0 -z-10 h-full w-full object-cover">
-        )}
 
+<ImgContainer>
+    <Fragment slot="title">{page.title.rendered}</Fragment>
+    <span slot="image">
+            <img
+                    src={cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                    srcset={`
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       `}
+                    sizes="(max-width: 1920px) 100vw, 1920px"
+                    alt={page?.featured_media?.alt_text || page.title.rendered}
+                    title={page?.featured_media?.title?.rendered ||page.title.rendered}
+                    width="1920" height="750"
+                    class="absolute inset-0 -z-10 h-full w-full object-cover">
+    </span>
+    {page.acf.short_description && (
+    <span slot="description">{page.acf.short_description}</span>
+    )}
 
-        <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
-            <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-        </div>
-        <div class="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
-            <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-        </div>
-
-
-
-    </div>
+</ImgContainer>
 
     <Container title={page.title.rendered}>
         <div class="my-4" set:html={page.content.rendered}></div>
@@ -89,7 +86,8 @@ const showFuture = (currentPage === 1 || !currentPage);
                                 <div class="relative overflow-hidden">
                                     <a href={`/seminar/${item.slug}`} title={item.title.rendered}>
                                         <img src={cloudinaryRawSettings(item.featured_media.source_url, 'c_thumb,g_faces:auto,h_180,q_auto:best,w_300')} class="group-hover:scale-110 duration-500 ease-in-out"
-                                             alt={item.featured_media.alt_text || item.title.rendered}>
+                                             alt={item.featured_media.alt_text || item.title.rendered}
+                                             width="300" height="180" loading="lazy">
 
                                         <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 duration-500 ease-in-out"></div>
 
@@ -111,6 +109,8 @@ const showFuture = (currentPage === 1 || !currentPage);
                 </div>
         )}
 
+        <h2 class="font-light text-[34px] tracking-[1px] leading-[54px] my-4">Προηγούμενα Σεμινάρια</h2>
+
         <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-[30px]">
         {paginated.data.map((item) => (
 
@@ -118,7 +118,8 @@ const showFuture = (currentPage === 1 || !currentPage);
                     <div class="relative overflow-hidden">
                         <a href={`/seminar/${item.slug}`} title={item.title.rendered}>
                         <img src={cloudinaryRawSettings(item.featured_media.source_url, 'c_thumb,g_faces:auto,h_180,q_auto:best,w_300')} class="group-hover:scale-110 duration-500 ease-in-out"
-                             alt={item.featured_media.alt_text || item.title.rendered}>
+                             alt={item.featured_media.alt_text || item.title.rendered}
+                             width="300" height="180" loading="lazy">
 
                         <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 duration-500 ease-in-out"></div>
 
@@ -137,6 +138,15 @@ const showFuture = (currentPage === 1 || !currentPage);
                 </div>
         ))}
         </div>
+
+        <Pagination
+                totalPages={paginated.totalPages}
+                baseURL={`/seminars`}
+                currentPage={paginated.currentPage}
+                client:idle
+                previousText="Προηγούμενο"
+                nextText="Επόμενο"
+        />
     </Container>
 
 

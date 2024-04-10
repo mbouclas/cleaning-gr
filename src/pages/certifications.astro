@@ -1,0 +1,71 @@
+---
+import {IGenericWpObject} from "@models/general";
+import Layout from "@layouts/default.astro";
+import {BaseService} from "@services/base.service";
+import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
+import Container from '@components/container-with-shadow.astro';
+import ImgContainer from '@components/header-with-rounded-image.astro';
+import {IWpGenericTaxonomy} from "@models/general";
+import {svgIcon} from "@helpers/general";
+
+const service = new BaseService();
+const items = await service.load(`certification`);
+const page = await new BaseService().getPostObjectByProperty('page', 'acf.template.slug','certifications') as IGenericWpObject;
+const seo = {
+    title: page.yoast_head_json.title,
+    description: page.yoast_head_json.description,
+}
+
+---
+<Layout {seo}>
+
+    <ImgContainer>
+        <Fragment slot="title">{page.title.rendered}</Fragment>
+        <span slot="image">
+            <img
+                    src={cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                    srcset={`
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       `}
+                    sizes="(max-width: 1920px) 100vw, 1920px"
+                    alt={page?.featured_media?.alt_text || page.title.rendered}
+                    title={page?.featured_media?.title?.rendered ||page.title.rendered}
+                    width="1920" height="750"
+                    class="absolute inset-0 -z-10 h-full w-full object-cover">
+    </span>
+        {page.acf.short_description && (
+                <span slot="description">{page.acf.short_description}</span>
+        )}
+
+    </ImgContainer>
+
+    <Container>
+        <div class="my-4" set:html={page.content.rendered}></div>
+        {Array.isArray(items) && (
+        <div class="grid grid-cols-1 gap-2 gap-y-6 md:grid-cols-2 lg:grid-cols-4 my-4">
+            {items.map((item: IWpGenericTaxonomy) => (
+                    <div class="bg-white shadow-2xl rounded-sm md:rounded-lg text-center">
+                        {item.acf.icon && (
+                                <a href={`/certification/${item.slug}`} title={item.name} class="inline-flex justify-center text-center">
+                                    <Fragment set:html={svgIcon(item.acf.icon, 'h-32 w-32')}></Fragment>
+                                </a>
+                        )}
+
+                        <div class="p-20 md:p-25 xl:p-30">
+                            <h3 class="font-bold text-18px md:text-20px lg:text-24px mb-10 lg:mb-12">
+                                <a href={`/certification/${item.slug}`} class="inline-block text-black-color hover:text-primary-color ease-in duration-300">
+                                    {item.name}
+                                </a>
+                            </h3>
+
+                        </div>
+                    </div>
+
+
+            ))}
+        </div>
+        )}
+    </Container>
+</Layout>

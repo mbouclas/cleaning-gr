@@ -5,6 +5,10 @@ import {IWpGenericTaxonomy} from "@models/general";
 import {arrayPaginator, IArrayPaginator} from "@helpers/paginate-array";
 import {IGenericWpObject} from "@models/general";
 import Layout from "@layouts/default.astro";
+import Table from '@components/certified-techs-table.astro';
+import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
+import ImgContainer from '@components/header-with-rounded-image.astro';
+import Container from '@components/container-with-shadow.astro';
 
 export async function getStaticPaths() {
     const per_page = 12;
@@ -37,57 +41,43 @@ const seo = {
     title: page.yoast_head_json.title,
     description: page.yoast_head_json.description,
 }
-const service = new BaseService();
-const allCertifications = await service.load(`certification`);
+
 
 ---
 <Layout {seo}>
 
+    <ImgContainer>
+        <Fragment slot="title">{page.title.rendered}</Fragment>
+        <span slot="image">
+            <img
+                    src={cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                    srcset={`
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       `}
+                    sizes="(max-width: 1920px) 100vw, 1920px"
+                    alt={page?.featured_media?.alt_text || page.title.rendered}
+                    title={page?.featured_media?.title?.rendered ||page.title.rendered}
+                    width="1920" height="750"
+                    class="absolute inset-0 -z-10 h-full w-full object-cover">
+    </span>
+        {page.acf.short_description && (
+                <span slot="description">{page.acf.short_description}</span>
+        )}
 
-    <div class="relative overflow-x-auto">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">
-                    Όνομα
-                </th>
-                {allCertifications.map((certification) => (
-                    <th scope="col" class="px-6 py-3">
-                        {certification.name}
-                    </th>
-                ))}
+    </ImgContainer>
+    <Container>
+    <Table items={paginated.data} />
 
+        <Pagination
+                totalPages={paginated.totalPages}
+                baseURL={`/certified`}
+                currentPage={paginated.currentPage}
+                client:idle
+                previousText="Προηγούμενο"
+                nextText="Επόμενο"
+        />
+    </Container>
 
-            </tr>
-            </thead>
-            <tbody>
-            {paginated.data.map((item) => (
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    <a href={`/tech/${item.slug}`} class="hover:underline">{item.title.rendered}</a>
-                </th>
-
-                {allCertifications.map((certification) => (
-                        <td class="px-6 py-4">
-                            {item.acf.certification.indexOf(certification.id) !== -1 && (
-                                    <svg class="text-green-400 w-6 h-6"
-                                            xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275q-.275.275-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7q-.275-.275-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22"/></svg>
-                            )}
-                        </td>
-                ))}
-            </tr>
-            ))}
-            </tbody>
-        </table>
-    </div>
-
-    {paginated.data.map((item) => (
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div class="card">
-                    <div class="card-body">
-                        <a href={`/tech/${item.slug}`} class="card-title">{item.title.rendered}</a>
-                    </div>
-                </div>
-            </div>
-    ))}
 </Layout>

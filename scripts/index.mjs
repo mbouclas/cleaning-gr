@@ -121,7 +121,7 @@ async function saveAcfGroups() {
         }
     });
 
-    if (!foundIdx) {
+    if (foundIdx < 0) {
         return;
     }
 

@@ -14,6 +14,7 @@ export interface IGenericWpObject {
     slug: string;
     status: string;
     type: string;
+    post_type: string;
     link: string;
     title: Title;
     content: Content;

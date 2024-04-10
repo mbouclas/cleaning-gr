@@ -9,30 +9,42 @@ import '@assets/custom.css'
 import {svgIcon} from "@helpers/general";
 import {stripDomainFromWpUrl} from "@helpers/menus";
 
-const { title = config.seo.defaults.title, seo = {} } = Astro.props;
+const service = new BaseService();
+const siteSettings = await service.getSiteSettings();
+if (siteSettings.length === 0) {
+    throw new Error('No site settings found');
+}
+const seoDefaults = service.getAcfField('seo_defaults', siteSettings);
+
+
+const { title = seoDefaults.value.title, seo = {
+    title: seoDefaults.value.title,
+    description: seoDefaults.value.description,
+} } = Astro.props;
 
 if (!seo.title) {
     seo.title = title
 }
-seo.og_title = seo.og_title || seo.title;
-seo.og_description = seo.og_description || seo.description;
-const service = new BaseService();
+seo['og_title'] = seo['og_title'] || seo.title;
+seo['og_description'] = seo['og_description'] || seo.description;
+
 const allMenus = await service.load('all_menus') as IWPGenericMenu[];
 const topMenu = allMenus.find(menu => menu.slug === 'top-menu') as IWPGenericMenu;
 const currentUrl = Astro.url.pathname;
-const logo = await service.getAcfFieldValue('logo')
+const logo = await service.getAcfFieldValue('logo');
+import favicon from '../../public/favicon.svg';
 
 ---
 <html>
 <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/businesslink/image/upload/v1703153059/quality-cars/quality-cars-logo-2_xzfulb.svg" />
+    <link rel="icon" type="image/svg+xml" href={favicon.src} />
     <meta name="viewport" content="width=device-width" />
     <SEO
             extend={seo}
-            description={seo.description || config.seo.defaults.description}
+            description={seo.description || seoDefaults.value.description}
             title={seo.title || title}
-            canonical={seo.canonical || config.seo.defaults.canonical}
+
 
     />
     <style>

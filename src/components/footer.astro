@@ -3,21 +3,17 @@ import {BaseService} from "@services/base.service";
 import type {IWPGenericMenu} from "@models/menus";
 import {stripDomainFromWpUrl} from "@helpers/menus";
 import {svgIcon} from "@helpers/general";
+import ChevronRight from '@components/icons/chevron-right.astro';
 
 const service = new BaseService();
 const allMenus = await service.load('all_menus') as IWPGenericMenu[];
 const footerMenu = allMenus.find(menu => menu.slug === 'footer-menu') as IWPGenericMenu;
 const logo = await service.getAcfFieldValue('logo')
 ---
-<footer class=" group relative text-muted-600 body-font overflow-hidden">
+<footer class="my-4 pt-6 footer bg-dark-footer relative text-gray-200">
 
 
-    <div class="overflow-x-hidden">
-        <div class="absolute bottom-0 mt-[100px] ml-[-50%] h-[200px] w-[200%] rounded-t-[100%] bg-gradient-to-b from-blue-400 via-blue-500 to-blue-600">
-            <div class="mt-5 text-center text-2xl text-white">Footer</div>
-        </div>
-    </div>
-    <div class="relative w-full max-w-7xl mx-auto px-5 py-24 z-20">
+    <div class="relative w-full max-w-7xl mx-auto px-5  z-20">
 
         <div class="flex flex-wrap md:text-left text-center">
             <div class="lg:w-1/4 md:w-1/2 w-full px-4">
@@ -25,7 +21,8 @@ const logo = await service.getAcfFieldValue('logo')
                 <ul class="font-sans space-y-2 mb-10">
                     {footerMenu.items.map(item => (
                     <li>
-                        <a href={stripDomainFromWpUrl(item)} class=" text-sm underline-offset-4 text-muted-300/60 hover:text-white hover:underline dark:text-muted-400 dark:hover:text-muted-100">
+                        <a href={stripDomainFromWpUrl(item)} class="inline-flex text-sm underline-offset-4 text-muted-300/60 hover:text-white hover:underline dark:text-muted-400 dark:hover:text-muted-100">
+                            <ChevronRight />
                             {item.title}
                         </a>
                     </li>
@@ -44,26 +41,10 @@ const logo = await service.getAcfFieldValue('logo')
 
             </a>
             <p class="text-sm text-muted-400 sm:ml-6 sm:mt-0 mt-4">
-                © {new Date().getFullYear()}.    <a href="https://businesslink-hq.com.cy" class="hover:underline"
-                   title="Handcrafted by Businesslink HQ" aria-label="Handcrafted by Businesslink HQ"> Businesslink HQ</a>
+               <span class="font-bold">© {new Date().getFullYear()}</span>.    <a href="https://businesslink-hq.com.cy" class="hover:underline"
+                   title="Handcrafted by Businesslink HQ" aria-label="Handcrafted by Businesslink HQ">Handcrafted by Businesslink HQ</a>
             </p>
-            <span class="
-              inline-flex
-              gap-3
-              sm:ml-auto sm:mt-0
-              mt-4
-              justify-center
-              sm:justify-start
-            ">
-            <a href="#" class="text-muted-400 hover:text-primary-500">
-              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="0.63em" height="1em" viewBox="0 0 320 512" data-icon="fa6-brands:facebook-f" class="iconify w-4 h-4 iconify--fa6-brands"><path fill="currentColor" d="m279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"></path></svg>
-            </a>
 
-            <a href="#" class="text-muted-400 hover:text-primary-500">
-              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="0.88em" height="1em" viewBox="0 0 448 512" data-icon="fa6-brands:instagram" class="iconify w-4 h-4 iconify--fa6-brands"><path fill="currentColor" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9S287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7s74.7 33.5 74.7 74.7s-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8c-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8s26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9c-26.2-26.2-58-34.4-93.9-36.2c-37-2.1-147.9-2.1-184.9 0c-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9c1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0c35.9-1.7 67.7-9.9 93.9-36.2c26.2-26.2 34.4-58 36.2-93.9c2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6c-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6c-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6c29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6c11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"></path></svg>
-            </a>
-
-          </span>
         </div>
     </div>
 </footer>

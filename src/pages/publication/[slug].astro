@@ -1,43 +1,36 @@
 ---
 import {BaseService} from "@services/base.service";
-import {IGenericWpObject} from "@models/general";
+import {IGenericWpObject, IWpGenericTaxonomy} from "@models/general";
+import {svgIcon} from "@helpers/general";
 import Layout from "@layouts/default.astro";
 import Container from "@components/container-with-shadow.astro";
 import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
+import ImgContainer from '@components/header-with-rounded-image.astro';
+import Table from '@components/certified-techs-table.astro';
+
 interface Props {
     item: IGenericWpObject;
 }
 
+
 export async function getStaticPaths() {
-    const items = await new BaseService().load('article');
-    let all = [];
+    const items = await new BaseService().load('publication');
 
-    for (let idx = 0; idx < items.length; idx++) {
-        all.push({
-            params: {
-                slug: items[idx].slug
-            },
-            props: {
-                item: items[idx]
-            }
-        });
-    }
-
-    return all;
+    return items.map((item: IGenericWpObject) => ({
+        params: { slug: item.slug },
+        props: {
+            item
+        }
+    }));
 }
 
-const {item}: Props = Astro.props;
-const service = new BaseService();
-
-
+const {item, techs} = Astro.props as Props;
 const seo = {
-    title: item?.yoast_head_json?.title || item.title.rendered,
-    description: item?.yoast_head_json?.description || item.title.rendered,
+    title: item?.yoast_head_json?.title || item.name,
+    description: item?.yoast_head_json?.description || item.name,
 }
-
 ---
 <Layout {seo}>
-
     <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
         {item.featured_media && (
                 <img
@@ -64,6 +57,7 @@ const seo = {
         </div>
     </div>
     <Container>
-    <div set:html={item.content.rendered} class="my-4 prose leading:loose prose-bold  prose-a:text-accent max-w-none"></div>
+        <div class="my-4 prose leading:loose prose-bold  prose-a:text-accent max-w-none" set:html={item.content.rendered}></div>
+
     </Container>
 </Layout>

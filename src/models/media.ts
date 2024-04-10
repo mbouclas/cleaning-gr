@@ -26,7 +26,13 @@ export interface IWpMedia {
     media_details: MediaDetails;
     post?: null;
     _links: Links;
+    cloudinary?: ICloudinaryDetails;
 }
+export interface  ICloudinaryDetails {
+    url: string;
+    public_id: string;
+}
+
 export interface Guid {
     rendered: string;
 }

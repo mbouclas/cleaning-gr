@@ -1,9 +1,80 @@
 
 ---
-import {BaseService} from "../services/base.service";
+import {IGenericWpObject} from "@models/general";
+import {BaseService} from "@services/base.service";
 import Layout from "@layouts/default.astro";
+import {IAcfField} from "@models/general";
+import Form from '@components/contact-form.svelte';
+import Container from '@components/container-with-shadow.astro';
+import ImgContainer from '@components/header-with-rounded-image.astro';
+import {cloudinaryRawSettings} from "../helpers/cloudinary.helper";
 
-const seo = await new BaseService().getSectionSeo('contact');
+const service = new BaseService();
+const fields = await service.load(`contact_form_fields`) as IAcfField[];
+const siteSettings = await service.getSiteSettings();
+if (siteSettings.length === 0) {
+    throw new Error('No site settings found');
+}
+
+const page = await service.getPostObjectByProperty('page', 'acf.template.slug','contact') as IGenericWpObject;
+const seo = {
+    title: page.yoast_head_json.title,
+    description: page.yoast_head_json.description,
+}
+
+const map = service.getAcfField('map', siteSettings);
+const phone = service.getAcfField('phone_number', siteSettings);
+const contact_form_text = service.getAcfField('contact_form_text', siteSettings);
 ---
 <Layout {seo}>
+    <ImgContainer>
+        <Fragment slot="title">{page.title.rendered}</Fragment>
+        <span slot="image">
+            <img
+                    src={cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                    srcset={`
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       `}
+                    sizes="(max-width: 1920px) 100vw, 1920px"
+                    alt={page?.featured_media?.alt_text || page.title.rendered}
+                    title={page?.featured_media?.title?.rendered ||page.title.rendered}
+                    width="1920" height="750"
+                    class="absolute inset-0 -z-10 h-full w-full object-cover">
+    </span>
+        {page.acf.short_description && (
+                <span slot="description">{page.acf.short_description}</span>
+        )}
+
+    </ImgContainer>
+    <div class="w-full max-w-7xl mx-auto px-4">
+        <div class="my-6">
+            <h1 class="font-sans text-2xl lg:text-3xl text-muted-800 dark:text-white">
+                Contact Us
+            </h1>
+            <p class="my-4">{contact_form_text.value}</p>
+
+        </div>
+        <div class="my-4">
+            <p class="text-sm text-muted-400 sm:ml-6 sm:mt-0 mt-4 inline-flex gap-1">
+                <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M19.95 21q-3.125 0-6.175-1.362t-5.55-3.863q-2.5-2.5-3.862-5.55T3 4.05q0-.45.3-.75t.75-.3H8.1q.35 0 .625.238t.325.562l.65 3.5q.05.4-.025.675T9.4 8.45L6.975 10.9q.5.925 1.187 1.787t1.513 1.663q.775.775 1.625 1.438T13.1 17l2.35-2.35q.225-.225.588-.337t.712-.063l3.45.7q.35.1.575.363T21 15.9v4.05q0 .45-.3.75t-.75.3"/>
+                    <title>Phone Number</title>
+                </svg>
+                {phone.value}
+
+            </p>
+
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-6">
+            <div class="lg:col-span-8">
+                <Form {fields} client:only="svelte" />
+            </div>
+            <div class="lg:col-span-4">
+                {map.value && (
+                        <div set:html={map.value} class="h-96 w-full" />
+                )}
+            </div>
+        </div>
+    </div>
 </Layout>

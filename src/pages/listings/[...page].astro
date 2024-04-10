@@ -5,13 +5,16 @@ import {IWpGenericTaxonomy} from "@models/general";
 import {arrayPaginator, IArrayPaginator} from "@helpers/paginate-array";
 import {IGenericWpObject} from "@models/general";
 import Layout from "@layouts/default.astro";
-import {cloudinaryRawSettings} from "../../helpers/cloudinary.helper";
+import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
+import Pagination from "@components/pagination.svelte";
+import Container from '@components/container-with-shadow.astro';
 
 export async function getStaticPaths() {
     const per_page = 12;
     const service = new BaseService();
 
-    const allItems = await service.load(`listing`);
+    let allItems = await service.load(`listing`);
+    allItems = allItems.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     const firstPage = arrayPaginator<IGenericWpObject>(allItems, 1, per_page);
     const all = [];
@@ -54,6 +57,7 @@ const seo = {
                         sizes="(max-width: 1920px) 100vw, 1920px"
                         alt={page?.featured_media?.alt_text || page.title.rendered}
                         title={page?.featured_media?.title?.rendered ||page.title.rendered}
+                        width="1920" height="750"
                         class="absolute inset-0 -z-10 h-full w-full object-cover">
         )}
         <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
@@ -64,22 +68,52 @@ const seo = {
         </div>
         <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">{page.title.rendered}</h2>
-            <p class="mt-6 text-lg leading-8 text-gray-300">Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat fugiat aliqua.</p>
         </div>
     </div>
-
+    <Container>
     <div class="my-4   p-8">
         <div class="prose leading:loose prose-bold  prose-a:text-accent max-w-none text-muted-50" set:html={page.content.rendered}>
         </div>
     </div>
 
-    {paginated.data.map((item) => (
-            <div class="col-md-4 col-sm-6 col-xs-12">
-                <div class="card">
-                    <div class="card-body">
-                        <a href={`/listing/${item.slug}`} class="card-title">{item.title.rendered}</a>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-[30px] my-4">
+            {paginated.data.map((item) => (
+                    <div class="group relative rounded-md shadow hover:shadow-lg dark:shadow-gray-800 duration-500 ease-in-out overflow-hidden">
+                        <div class="relative overflow-hidden">
+                            <a href={`/listing/${item.slug}`} title={item.title.rendered}>
+                                <img src={cloudinaryRawSettings(item.featured_media.source_url, 'c_thumb,g_faces:auto,h_180,q_auto:best,w_300')} class="group-hover:scale-110 duration-500 ease-in-out"
+                                     alt={item.featured_media.alt_text || item.title.rendered}
+                                width="300" height="180" loading="lazy"
+                                >
+
+                                <div class="absolute inset-0 bg-slate-900/50 opacity-0 group-hover:opacity-100 duration-500 ease-in-out"></div>
+
+                            </a>
+                        </div>
+
+                        <div class="content p-6 relative">
+                            <a href={`/listing/${item.slug}`} title={item.title.rendered} class="text-lg font-medium block hover:text-indigo-600 duration-500 ease-in-out mt-2">
+                                {item.title.rendered}
+                            </a>
+
+                            <p class="text-slate-400 mt-3 mb-4">{item.acf.excerpt || ''}</p>
+
+                        </div>
+
                     </div>
-                </div>
-            </div>
-    ))}
+
+            ))}
+        </div>
+
+    <Pagination
+            totalPages={paginated.totalPages}
+            baseURL={`/listings`}
+            currentPage={paginated.currentPage}
+            client:idle
+            previousText="Προηγούμενο"
+            nextText="Επόμενο"
+    />
+
+    </Container>
 </Layout>
