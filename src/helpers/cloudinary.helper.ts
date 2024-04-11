@@ -81,3 +81,18 @@ export function cloudinarySrcSet(src: string, sizes = [767, 1190]) {
         }))
     };
 }
+
+export function cloudinaryUrlFromRaw(item: IWpMedia, settings: string) {
+    if (!item) {
+        return config.defaultNoImage;
+    }
+
+    if (item && item.cloudinary) {
+        return cloudinaryRawSettings(item.cloudinary.url, settings);
+    }
+
+    // remove any w_ or h_ settings
+    const src = item.source_url.replace(/(w_\d+,|h_\d+,)/g, '');
+
+    return cloudinaryRawSettings(src, settings);
+}

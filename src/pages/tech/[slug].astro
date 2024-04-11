@@ -4,7 +4,7 @@ import {IGenericWpObject} from "@models/general";
 import Layout from "@layouts/default.astro";
 import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
 import Container from "@components/container-with-shadow.astro";
-import {svgIcon} from "../../helpers/general";
+import {svgIcon} from "@helpers/general";
 interface Props {
     item: IGenericWpObject;
 }
@@ -40,10 +40,6 @@ item.acf.certification = item.acf.certification.map(id => certifications.find(ce
 if (item.acf.for_paid && Array.isArray(item.acf.for_paid.gallery)) {
     item.acf.for_paid.gallery = item.acf.for_paid.gallery.map(id => images.find(img => img.id === id));
 }
-
-
-
-console.log(item.acf)
 
 ---
 <Layout {seo}>
@@ -124,7 +120,8 @@ console.log(item.acf)
         <h3 class="text-2xl font-semibold my-4">Πιστοποιήσεις τεχνικού</h3>
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 my-4">
-            {item.acf.certification.map(cert => (
+
+            {Array.isArray(item.acf.certification) && item.acf.certification.map(cert => (
                     <div class="group px-6 py-8 bg-white dark:bg-slate-900 shadow hover:shadow-lg dark:hover:shadow-gray-800 duration-500 ease-in-out border-t-[3px] border-gray-100 dark:border-gray-700 hover:border-indigo-600 dark:hover:border-indigo-600">
                         <i class="uil uil-building text-3xl text-indigo-600"></i>
 
