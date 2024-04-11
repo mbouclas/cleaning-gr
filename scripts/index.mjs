@@ -143,33 +143,6 @@ async function saveAllContent() {
     console.log(`* Saving All content complete`)
 }
 
-async function saveAllPosts() {
-    const s = new PostsService();
-    const items = await s.getPosts();
-    try {
-        await writeFile(
-            join(cacheFolderLocation, `all_posts.json`),
-            JSON.stringify(items)
-        )
-        console.log(`* Saving All posts complete`)
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-async function saveAllPages() {
-    const s = new PagesService();
-    const items = await s.getPages();
-    try {
-        await writeFile(
-            join(cacheFolderLocation, `all_pages.json`),
-            JSON.stringify(items)
-        )
-        console.log(`* Saving All pages complete`)
-    } catch (e) {
-        console.log(e)
-    }
-}
 
 
 async function saveOptionsPages() {

@@ -1,4 +1,4 @@
-import { writeFile } from "fs/promises";
+import {readFile, writeFile} from "fs/promises";
 import {join} from "path";
 import {PostProcessing} from "./postProcessing.mjs";
 
@@ -86,7 +86,7 @@ export class BaseService {
             console.log(`*** ${postType} page ${idx + 1} complete. ${allPosts.length} of ${totalItems} items fetched.`);
         }
 
-        const postProcessingService = new PostProcessing(this.cacheFolderLocation);
+/*        const postProcessingService = new PostProcessing(this.cacheFolderLocation);
         for (const post of allPosts) {
             post.tags = await postProcessingService.tags(post.tags);
             if (post.featured_media && typeof post.featured_media === 'number') {
@@ -105,7 +105,7 @@ export class BaseService {
                 post.acf.gallery = await postProcessingService.images(post.acf.gallery);
             }
 
-        }
+        }*/
 
         return allPosts;
     }
@@ -121,6 +121,42 @@ export class BaseService {
                     JSON.stringify(items)
                 )
                 console.log(`* Saving ${pt.label} complete`)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        // run post processing
+        const postProcessingService = new PostProcessing(cacheFolderLocation);
+        for (const pt of allPostTypes) {
+            const allPostsRaw = await readFile(join(cacheFolderLocation, `${pt.name}.json`), 'utf-8');
+            const allPosts = JSON.parse(allPostsRaw);
+
+            for (const post of allPosts) {
+                post.tags = await postProcessingService.tags(post.tags);
+                if (post.featured_media && typeof post.featured_media === 'number') {
+                    const found = await postProcessingService.images([post.featured_media]);
+                    if (found.length > 0) {
+                        post.featured_media = found[0];
+                    }
+                }
+
+                if (Array.isArray(post.categories)) {
+                    post.categories = await postProcessingService.categories(post.categories);
+                }
+
+
+                if (post.acf && Array.isArray(post.acf.gallery) && post.acf.gallery.length > 0) {
+                    post.acf.gallery = await postProcessingService.images(post.acf.gallery);
+                }
+            }
+
+            try {
+                await writeFile(
+                    join(cacheFolderLocation, `${pt.name}.json`),
+                    JSON.stringify(allPosts)
+                )
+                console.log(`* Saving processed ${pt.label} complete`)
             } catch (e) {
                 console.log(e)
             }
