@@ -9,6 +9,11 @@ export class BaseService {
         return JSON.parse(cached.toString());
     }
 
+    public async getById(id: number, type: string) {
+        const items = await this.load(type);
+        return items.find((item: any) => item.id === id);
+    }
+
     public async getSiteSettings(key = 'Site Settings'): Promise<IAcfField[]> {
         const allAcfGroups = await this.load('all_options_pages');
         const siteSettingsGroup = allAcfGroups.find((group: any) => group.title === key);

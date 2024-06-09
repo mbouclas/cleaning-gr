@@ -2,6 +2,10 @@
 import {BaseService} from "@services/base.service";
 import {IGenericWpObject} from "@models/general";
 import Layout from "@layouts/default.astro";
+import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
+import Container from "@components/container-with-shadow.astro";
+import Gallery from "@components/image-gallery.svelte";
+import {IWpMedia} from "@models/media";
 interface Props {
     item: IGenericWpObject;
 }
@@ -30,13 +34,60 @@ const seo = {
     title: item?.yoast_head_json?.title || item.title.rendered,
     description: item?.yoast_head_json?.description || item.title.rendered,
 }
+const gallery = item?.acf?.gallery as IWpMedia[] || [] ;
+const videoGallery = item?.acf?.videos || [] ;
+console.log(videoGallery)
 ---
 <Layout {seo}>
-    <div class="max-w-7xl mx-auto w-full">
-        <div class="my-4 px-4 md:px-0">
-            <h1 class=" font-sans font-light text-5xl ltablet:text-5xl lg:text-5xl leading-none mb-2 text-muted-800 dark:text-white">
-                {item.title.rendered}
-            </h1>
+    <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+        {item.featured_media && (
+                <img
+                        src={cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                        srcset={`
+                                   ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                                   ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                                   ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                                   `}
+                        sizes="(max-width: 1920px) 100vw, 1920px"
+                        alt={item?.featured_media?.alt_text || item.title.rendered}
+                        title={item?.featured_media?.title?.rendered ||item.title.rendered}
+                        width="1920" height="750"
+                        class="absolute inset-0 -z-10 h-full w-full object-cover">
+        )}
+        <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
+            <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+        </div>
+        <div class="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
+            <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+        </div>
+        <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">{item.title.rendered}</h2>
         </div>
     </div>
+    <Container>
+        <div class="my-4 prose leading:loose prose-bold  prose-a:text-accent max-w-none" set:html={item.content.rendered}></div>
+<div class="my-4">
+    <Gallery client:idle>
+        <div id="grid" class="md:flex justify-center mx-auto mt-4 shuffle" style="position: relative; overflow: hidden;  transition: height 250ms cubic-bezier(0.4, 0, 0.2, 1) 0s;">
+            {gallery.map(item => (
+                    <div class="lg:w-1/4 md:w-1/2 p-4 picture-item shuffle-item shuffle-item--visible" style=" top: 0px; visibility: visible; will-change: transform; left: 0px; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">
+                        <div class="group relative block overflow-hidden rounded-md duration-500">
+                            <a href={cloudinaryRawSettings(item.source_url, 'e_improve,g_auto,q_auto:best,f_webp,dpr_auto')}
+                               data-title={item.alt_text}
+                               class="gallery" data-zoomable="true">
+                                <img src={cloudinaryRawSettings(item.source_url, 'c_thumb,e_improve,g_auto,h_300,w_300,q_auto:best,f_webp,dpr_auto')}
+                                     class=" group-hover:origin-center group-hover:scale-110 group-hover:rotate-3 duration-500" alt="">
+                            </a>
+
+                        </div>
+                    </div>
+            ))}
+        </div>
+    </Gallery>
+</div>
+
+        {videoGallery.map(item => (
+            <div class="embed-container" set:html={item.video}></div>
+        ))}
+    </Container>
 </Layout>

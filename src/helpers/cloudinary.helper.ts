@@ -21,13 +21,11 @@ export function cloudinaryRawSettings(src: string, settings: string) {
         return config.defaultNoImage;
     }
 
-    if (typeof src === 'object') {
-        src = src['url'];
-    }
-
     if (src.indexOf('cloudinary') === -1) {
         return src;
     }
+
+    src = src.replace(/images\/.*\/v/, 'images/v');
 
     const ext = src.split('.').pop().replace(/\?.*$/, "");
 
@@ -39,6 +37,7 @@ export function cloudinaryRawSettings(src: string, settings: string) {
         .replace('upload/', `upload/${settings}/`)
         .replace('images/', `images/${settings}/`);
 }
+
 export function optimizeCloudinaryImage(src: string, w: number|null = null, h: number|null = null, cropMode: 'fit'|'fill' = 'fit', q = 'auto:good'): string {
     if (typeof src === 'undefined' || !src) {
         return  config.defaultNoImage;

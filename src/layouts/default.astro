@@ -5,6 +5,8 @@ import { SEO } from "astro-seo"
 import Header from "@components/header.svelte";
 import Footer from "@components/footer.astro";
 import {config} from "@data/config";
+import '@fontsource/roboto';
+import '@fontsource-variable/open-sans';
 import '@assets/custom.css'
 import {svgIcon} from "@helpers/general";
 import {stripDomainFromWpUrl} from "@helpers/menus";
@@ -50,11 +52,11 @@ import favicon from '../../public/favicon.svg';
     <style>
         .content {
             content-visibility: auto;
-            content-intrinsic-size: 1px 2500px;
+            contain-intrinsic-size: 1px 2500px;
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 font-open font-light">
 <Header client:idle>
 
     <span slot="logo" set:html={svgIcon(logo, 'w-36 h-36')}></span>

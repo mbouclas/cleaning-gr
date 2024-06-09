@@ -1,9 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 const plugin = require("tailwindcss/plugin");
+import defaultTheme from 'tailwindcss/defaultTheme';
 export default {
 	darkMode: 'class',
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
+		fontFamily: {
+			sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+			'roboto': ['"Roboto", roboto'],
+			'open': ['"Open Sans Variable", sans-serif'],
+
+
+		},
 		screens: {
 			xs: "540px",
 			sm: '640px',
@@ -124,42 +132,7 @@ export default {
 				3: '3',
 				999: '999',
 			},
-			fontFamily: {
-				'body': [
-					'Inter',
-					'ui-sans-serif',
-					'system-ui',
-					'-apple-system',
-					'system-ui',
-					'Segoe UI',
-					'Roboto',
-					'Helvetica Neue',
-					'Arial',
-					'Noto Sans',
-					'sans-serif',
-					'Apple Color Emoji',
-					'Segoe UI Emoji',
-					'Segoe UI Symbol',
-					'Noto Color Emoji'
-				],
-				'sans': [
-					'Inter',
-					'ui-sans-serif',
-					'system-ui',
-					'-apple-system',
-					'system-ui',
-					'Segoe UI',
-					'Roboto',
-					'Helvetica Neue',
-					'Arial',
-					'Noto Sans',
-					'sans-serif',
-					'Apple Color Emoji',
-					'Segoe UI Emoji',
-					'Segoe UI Symbol',
-					'Noto Color Emoji'
-				]
-			},
+
 		},
 	},
 	plugins: [

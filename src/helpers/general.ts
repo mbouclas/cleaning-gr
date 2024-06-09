@@ -136,6 +136,22 @@ export function loadFiltersFromUrl(string: string) {
     return ret;
 }
 
-export function svgIcon(str: string, classes: string) {
-    return str.replace('<svg', `<svg class="${classes}"`);
+export function svgIcon(str: string, classes = '', styles = '', id = null) {
+    if (!str) {
+        return '';
+    }
+
+    if (styles.length > 0) {
+        // add a <style> tag to the svg before the first <path> tag
+        str = str.replace('<path', `<style>${styles}</style><path`);
+
+    }
+
+    if (id) {
+        str = str
+            .replace('<svg', `<svg id="${id}" class="${classes}"`);
+    }
+
+    return str
+        .replace('<svg', `<svg class="${classes}"`);
 }
