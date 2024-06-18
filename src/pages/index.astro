@@ -1,9 +1,9 @@
 ---
-import {IGenericWpObject} from "@models/general";
+import type {IGenericWpObject} from "@models/general";
 import Layout from '@layouts/default.astro';
 import {BaseService} from "@services/base.service";
 import type {IHomePage} from "@models/home";
-import {IWpGenericTaxonomy} from "@models/general";
+import type {IWpGenericTaxonomy} from "@models/general";
 import {svgIcon} from "@helpers/general";
 import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
 
@@ -27,6 +27,7 @@ const seo = {
     description: page.yoast_head_json.description,
     }
 page.acf.featured_certifications = page.acf.featured_certifications.map(c => parseInt(c));
+const testimonials = page.acf.testimonials;
 const certifications = allCertifications.filter(certification => page.acf.featured_certifications.includes(certification.id));
 const seminars = allSeminars.filter(seminar => page.acf.seminars.includes(seminar.id));
 const listings = allListings.filter(listing => page.acf.featured_listings.includes(listing.id));
@@ -78,30 +79,18 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
                 </li>
 
             </ul>
-            <div class="clients pt-16">
-                <h6 class="flex items-center mb-6 text-md font-normal text-body-color ">
-                    Some Of Our Clients
-                    <span class="inline-block w-8 h-px ml-3 bg-body-color"></span>
-                </h6>
-                <div class="flex items-center">
-                    <div class="block py-3 mr-4">
-                        <img src="./assets/images/client1.webp" alt="oracle">
-                    </div>
-                    <div class="block py-3 mr-4">
-                        <img src="./assets/images/client2.webp" alt="intel">
-                    </div>
-                    <div class="block py-3">
-                        <img src="./assets/images/client3.webp" alt="logitech">
-                    </div>
-                </div>
-            </div>
+
         </div>
+
     </div>
+
+
 
     <div class="w-full px-4 lg:w-6/12">
         <div class="lg:ml-auto lg:text-right">
             <div class="relative z-10 inline-block pt-11 lg:pt-0">
-                <img src="https://res.cloudinary.com/www-cpt-gr/image/upload/e_improve,w_500,f_webp,c_thumb,g_auto/v1712046914/cleaning/home/DSC00984.jpg" alt="hero" class="max-w-full lg:ml-auto rounded-[10px] rounded-tl-[150px]">
+                <img src="https://res.cloudinary.com/www-cpt-gr/image/upload/e_improve,w_500,f_webp,c_thumb,g_auto/v1712046914/cleaning/home/DSC00984.jpg"
+                     alt="hero" class="max-w-full lg:ml-auto rounded-[10px] rounded-tl-[150px]" width="500" height="350">
                 <span class="absolute -left-8 -bottom-8 z-[-1]">
                         <svg width="93" height="93" viewBox="0 0 93 93" fill="none" xmlns="http://www.w3.org/2000/svg">
                            <circle cx="2.5" cy="2.5" r="2.5" fill="#3056D3"></circle>
@@ -137,62 +126,36 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
 </div>
 
 <main class="content">
-    <section class="relative my-4 overflow-hidden">
-        <div class="container relative md:mt-24 mt-16">
-            <div class="grid md:grid-cols-12 grid-cols-1 items-center gap-[30px]">
-                <div class="lg:col-span-5 md:col-span-6">
-                    <div class="grid grid-cols-12 gap-6 items-center relative">
-                        <div class="col-span-6">
-                            <div class="grid grid-cols-1 gap-6">
-                                <img src="https://res.cloudinary.com/www-cpt-gr/image/upload/e_improve,w_218,h_320,c_thumb,g_auto/v1712046914/cleaning/home/DSC00984.jpg" class="shadow rounded-md"
-                                     alt="Επαγγελματικά σεμινάρια καθαρισμών"
-                                     width="500"
-                                     height="500"
-                                     loading="lazy"
-                                >
-                                <img src="https://res.cloudinary.com/www-cpt-gr/image/upload/e_improve,w_218,h_320,c_thumb,g_auto/v1712046945/cleaning/home/DSC00921.jpg" class="shadow rounded-md"
-                                     alt="Επαγγελματικά σεμινάρια καθαρισμών"
-                                     width="500"
-                                     height="500"
-                                     loading="lazy">
-                            </div>
+    <div class="container my-4">
+        <h3 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">Είπαν για εμάς</h3>
+
+        <div class="mx-auto grid max-w-2xl grid-cols-1 lg:mx-0 lg:max-w-none lg:grid-cols-2 gap-4">
+            {testimonials.map(item => (
+            <div class="flex flex-col pb-10 sm:pb-16 lg:pb-0 lg:pr-8 xl:pr-20">
+                <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">{item.company_name}</h3>
+                <figure class="mt-10 flex flex-auto flex-col justify-between">
+                    <blockquote class="text-lg leading-8 text-gray-900">
+                        <p>“{item.testimonial}”</p>
+                    </blockquote>
+                    <figcaption class="mt-10 flex items-center gap-x-6">
+                        <div class="text-base">
+                            <div class="font-semibold text-gray-900">{item.person_name}</div>
+                            <div class="mt-1 text-gray-500">{item.person_title}</div>
                         </div>
-
-                        <div class="col-span-6">
-                            <div class="grid grid-cols-1 gap-6">
-                                <img src="https://res.cloudinary.com/www-cpt-gr/image/upload/e_improve,w_218,h_320,c_thumb,g_auto/v1712046946/cleaning/home/DSC01012.jpg" class="shadow rounded-md"
-                                     alt="Επαγγελματικά σεμινάρια καθαρισμών"
-                                     width="500"
-                                     height="500"
-                                     loading="lazy">
-                            </div>
-                        </div>
-                        <div class="overflow-hidden after:content-[''] after:absolute after:size-[512px] after:bg-indigo-600/5 after:top-0 after:-end-5 after:-z-1 after:rounded-full"></div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-7 md:col-span-6">
-                    <div class="lg:ms-5">
-                        <h3 class="mb-6 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">Επαγγελματικά σεμινάρια<br>καθαρισμών</h3>
-
-
-                        <div class="mt-6">
-                            <a href="/seminars" class="relative inline-flex gap-1.5 tracking-wide align-middle text-base text-center border-none after:content-[''] after:absolute after:h-px after:w-0 hover:after:w-full after:end-0 hover:after:end-auto after:bottom-0 after:start-0 after:duration-500 font-semibold text-indigo-600 after:bg-indigo-600 duration-500 ease-in-out">
-                                Δείτε όλα τα σεμινάρια <ArrowRightIcon />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div><!--end grid-->
+                    </figcaption>
+                </figure>
+            </div>
+            ))}
         </div>
-    </section>
+    </div>
+
     <section class="relative md:py-24 py-4 overflow-hidden  my-4">
 
         <FeaturedSeminars items={seminars}  />
 
     </section><!-- END FEATURED SEMINARS -->
 
-    <div class="container relative my-4">
+    <div class="container relative my-4" id="Testimonials">
         <div class="grid md:grid-cols-12 grid-cols-1 items-center gap-[30px]">
             <div class="md:col-span-6">
                 <div class="lg:me-8">

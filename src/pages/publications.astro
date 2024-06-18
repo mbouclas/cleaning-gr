@@ -25,8 +25,8 @@ const seo = {
             <img
                     src={cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
                     srcset={`
-                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
-                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_350/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_550/q_auto:best/dpr_auto/f_webp')} 1024w,
                        ${cloudinaryRawSettings(page?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
                        `}
                     sizes="(max-width: 1920px) 100vw, 1920px"
@@ -47,7 +47,7 @@ const seo = {
                     <div class="group relative rounded-md shadow hover:shadow-lg dark:shadow-gray-800 duration-500 ease-in-out overflow-hidden">
                         <div class="relative overflow-hidden">
                             <a href={`/publication/${item.slug}`} title={item.title.rendered}>
-                                <img src={cloudinaryRawSettings(item.featured_media.source_url, 'c_thumb,g_faces:auto,h_180,q_auto:best,w_300')} class="group-hover:scale-110 duration-500 ease-in-out"
+                                <img src={cloudinaryRawSettings(item.featured_media.source_url, 'c_thumb,g_faces:auto,q_auto:best,w_300')} class="group-hover:scale-110 duration-500 ease-in-out"
                                      alt={item.featured_media.alt_text || item.title.rendered}
                                      width="300" height="180" loading="lazy"
                                 >
