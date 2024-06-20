@@ -6,9 +6,8 @@ export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
 		fontFamily: {
-			sans: ['Open Sans Variable', ...defaultTheme.fontFamily.sans],
+			sans: ['Arial', ...defaultTheme.fontFamily.sans],
 			'open': ['"Open Sans Variable", sans-serif'],
-
 
 		},
 		screens: {
