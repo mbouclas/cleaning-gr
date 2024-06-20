@@ -174,7 +174,7 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
                             srcset={`
                        ${cloudinaryRawSettings(certificationsPage?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
                        ${cloudinaryRawSettings(certificationsPage?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
-                       ${cloudinaryRawSettings(certificationsPage?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       ${cloudinaryRawSettings(certificationsPage?.featured_media?.source_url, 'c_limit,h_350,q_auto:best/f_webp/dpr_auto')} 1920w
                        `}
                             sizes="(max-width: 1920px) 100vw, 1920px"
                             alt={certificationsPage?.featured_media?.alt_text || certificationsPage.title.rendered}

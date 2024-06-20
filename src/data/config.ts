@@ -8,7 +8,7 @@ export const config = {
             canonical: process.env.BASE_URL,
         }
     },
-    defaultNoImage : 'https://res.cloudinary.com/dqehxczmc/image/upload/v1683624508/icons/dummy-post-horisontal-thegem-blog-default-large_i9rkvt_zdahwl.jpg',
+    defaultNoImage : 'https://res.cloudinary.com/dqehxczmc/image/upload/f_webp/v1683624508/icons/dummy-post-horisontal-thegem-blog-default-large_i9rkvt_zdahwl.jpg',
     heroImages: {
     }
 }

@@ -55,7 +55,7 @@ const {items} = Astro.props as {items: IGenericWpObject[]};
             <div class="group relative overflow-hidden rounded-md shadow dark:shadow-gray-800">
                 <a href={`/seminar/${item.slug}`} title={item.title.rendered}>
                 <img
-                     src={cloudinaryUrlFromRaw(item?.featured_media, 'c_thumb,h_350,q_auto:best,w_600/f_webp/dpr_auto')}
+                     src={cloudinaryUrlFromRaw(item?.featured_media, 'c_thumb,h_350,q_auto:best,w_550/f_webp/dpr_auto')}
 
                      alt={item?.featured_media?.alt_text || item.title.rendered}
                      title={item?.featured_media?.title?.rendered ||item.title.rendered}

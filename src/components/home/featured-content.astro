@@ -26,7 +26,7 @@ for (const postType of new Set(postTypes)) {
                     srcset={`
                        ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
                        ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
-                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,q_auto:best,w_580/f_webp/dpr_auto')} 1920w
                        `}
                     sizes="(max-width: 1920px) 100vw, 1920px"
                     alt={item?.featured_media?.alt_text || item.title.rendered}
