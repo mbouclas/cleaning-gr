@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type {IAcfField} from "@models/general.ts";
+    import type {IAcfField, IGenericObject} from "@models/general.ts";
     import {z} from "zod";
     import Fields from "@components/form-fields.svelte";
     import {onMount} from "svelte";
@@ -11,29 +11,30 @@
     let errors = {};
     let ready = false;
     let success = false;
+    export let labels: IGenericObject = {};
 
     onMount(() => {
-            schema = z.object({});
-            fields.forEach(field => {
-                if (field.type === 'group' && Array.isArray(field.sub_fields)) {
-                    field.sub_fields.filter(f => f.required === 1).forEach(f => {
-                        schema = schema.extend({
-                            [f._name]: f.type === 'email' ? z.string().email() : z.string().min(3, 'Too few characters')
-                        });
-
-                    });
-                } else {
-                    if (field.required !== 1) {
-                        return;
-                    }
+        schema = z.object({});
+        fields.forEach(field => {
+            if (field.type === 'group' && Array.isArray(field.sub_fields)) {
+                field.sub_fields.filter(f => f.required === 1).forEach(f => {
                     schema = schema.extend({
-                        [field._name]: field.type === 'email' ? z.string().email() : z.string().min(3, 'Too few characters')
+                        [f._name]: f.type === 'email' ? z.string().email() : z.string().min(3, labels['too_few_characters'] || 'Too few characters')
                     });
 
+                });
+            } else {
+                if (field.required !== 1) {
+                    return;
                 }
-            })
+                schema = schema.extend({
+                    [field._name]: field.type === 'email' ? z.string().email({message: labels['invalid_email'] || 'Invalid Email'}) : z.string().min(3, labels['too_few_characters'] || 'Too few characters')
+                });
 
-            fields.forEach(f => model[f._name] = '');
+            }
+        })
+
+        fields.forEach(f => model[f._name] = '');
 
 
         ready = true;
@@ -79,20 +80,24 @@
     }
 </script>
 
-    {#if success}
+{#if success}
     <div class="text-center my-6">
         <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-            <span class="font-medium">Thank you!</span> Your message has been sent.
+            <span class="font-medium">{labels['thank_you'] || 'Thank you!'}</span>
+            {labels['success_message'] || 'Your message has been sent successfully.'}
         </div>
     </div>
-    {/if}
+{/if}
 {#if ready}
-<form>
-    <Fields {fields} bind:errors={errors} />
+    <form>
 
-    <button onclick={submit}
-            type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Send</button>
-</form>
+        <Fields {fields} bind:errors={errors} labels={labels} />
+
+        <button on:click={submit}
+                type="submit" class="btn-primary w-full">
+            {labels['send'] || 'Send'}
+        </button>
+    </form>
 {/if}
 
 

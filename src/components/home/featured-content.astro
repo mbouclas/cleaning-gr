@@ -4,100 +4,33 @@ import {IGenericWpObject} from "@models/general";
 import {cloudinaryRawSettings} from "@helpers/cloudinary.helper";
 const service = new BaseService();
 const {items} = Astro.props as {items: IGenericWpObject[]};
-const postTypes = items.map(item => item.post_type);
+const postTypes = items
+    .map(item => item.post_type);
 let postObjects = [];
 
 
-for (const postType of postTypes) {
+for (const postType of new Set(postTypes)) {
     const all = await service.load(postType);
-
     postObjects = postObjects.concat(all.filter(i => items.find(t => t.ID === i.id) ));
 
 }
-
 ---
-{postObjects.length > 1 && (
-<div class="grid md:grid-cols-12 grid-cols-1 mt-8 gap-[30px]">
-    <div class="lg:col-span-4 md:col-span-5">
-        <div class="sticky top-20">
-            <ul class="flex-column p-6 bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 rounded-md" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
-                {postObjects.map((item: IGenericWpObject, idx) => (
-                <li role="presentation">
-                    <button class={`text-xl ${idx === 0 ? 'bg-primary text-white' : ''} px-4 py-2 text-start font-semibold rounded-md w-full mt-6 duration-500 hover:text-white hover:bg-primary-800`}
-                            id={`tab-${idx}`} data-idx={idx}
-                            type="button" role="tab" aria-controls={`tab-${idx}`} aria-selected="false">
-
-                        {item.title.rendered}
-                    </button>
-                </li>
-                ))}
-            </ul>
-        </div>
-    </div>
-
-    <div class="lg:col-span-8 md:col-span-7">
-        <div id="myTabContent" class="p-6 bg-white dark:bg-slate-900 shadow dark:shadow-gray-800 rounded-md">
-            {postObjects.map((item: IGenericWpObject, idx) => (
-            <div class={`${idx > 0 ? 'hidden' : ''}`} id={`img-tab-${idx}`} role="tabpanel" aria-labelledby={`tab-${idx}`}>
-                <a href={`/${item.type}/${item.slug}`} title={item.title.rendered}>
-                <img
-                        src={cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
-                        srcset={`
-                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
-                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
-                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
-                       `}
-                        sizes="(max-width: 1920px) 100vw, 1920px"
-                        alt={item?.featured_media?.alt_text || item.title.rendered}
-                        title={item?.featured_media?.title?.rendered ||item.title.rendered}
-                        width="1920" height="750" loading={idx === 0 ? 'eager' : 'lazy'}
-                        class="rounded-xl"
-                >
-                </a>
-            </div>
-            ))}
-        </div>
-    </div>
-</div>
-
-
-    <script>
-        const tabs = document.querySelectorAll('[role="tab"]');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                tabs.forEach(t => {
-                    t.setAttribute('aria-selected', 'false');
-                    t.classList.remove('bg-primary', 'text-white');
-                    const imgTab = document.getElementById(`img-tab-${t.getAttribute('data-idx')}`);
-                    imgTab.classList.add('hidden');
-                });
-                tab.setAttribute('aria-selected', 'true');
-                tab.classList.add('bg-primary', 'text-white');
-                const imgTab = document.getElementById(`img-tab-${tab.getAttribute('data-idx')}`);
-                imgTab.classList.remove('hidden');
-            });
-        });
-    </script>
-
-    )}
-
-{postObjects.length === 1 && (
-
+{postObjects.map(item => (
 <div class="grid md:grid-cols-12 grid-cols-1 items-center gap-[30px]">
 
     <div class="md:col-span-6">
         <div class="relative lg:me-8">
-            <a href={`/${postObjects[0].type}/${postObjects[0].slug}`} title={postObjects[0].title.rendered}>
+            <a href={`/${item.type}/${item.slug}`} title={item.title.rendered}>
             <img
-                    src={cloudinaryRawSettings(postObjects[0]?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
+                    src={cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')}
                     srcset={`
-                       ${cloudinaryRawSettings(postObjects[0]?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
-                       ${cloudinaryRawSettings(postObjects[0]?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
-                       ${cloudinaryRawSettings(postObjects[0]?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
+                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_350,w_800/q_auto:best/dpr_auto/f_webp')} 800w,
+                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_550,w_1024/q_auto:best/dpr_auto/f_webp')} 1024w,
+                       ${cloudinaryRawSettings(item?.featured_media?.source_url, 'c_limit,h_750,q_auto:best,w_1920/f_webp/dpr_auto')} 1920w
                        `}
                     sizes="(max-width: 1920px) 100vw, 1920px"
-                    alt={postObjects[0]?.featured_media?.alt_text || postObjects[0].title.rendered}
-                    title={postObjects[0]?.featured_media?.title?.rendered ||postObjects[0].title.rendered}
+                    alt={item?.featured_media?.alt_text || item.title.rendered}
+                    title={item?.featured_media?.title?.rendered ||item.title.rendered}
                     width="1920" height="750"
                     class="rounded-xl"
             >
@@ -109,15 +42,15 @@ for (const postType of postTypes) {
     <div class="md:col-span-6">
         <div class="lg:ms-5">
 
-            <h2 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">{postObjects[0].title.rendered}</h2>
-            {postObjects[0].acf?.short_description && (
-            <p class="text-slate-400 max-w-xl mb-6">{postObjects[0].acf?.short_description}</p>
+            <h4 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">{item.title.rendered}</h4>
+            {item.acf?.short_description && (
+            <p class="text-slate-400 max-w-xl mb-6">{item.acf?.short_description}</p>
             )}
-            <a href={`/${postObjects[0].type}/${postObjects[0].slug}`} class="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-indigo-600/5 hover:bg-indigo-600 border-indigo-600/10 hover:border-indigo-600 text-indigo-600 hover:text-white rounded-md">
+            <a href={`/${item.type}/${item.slug}`} class="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-indigo-600/5 hover:bg-indigo-600 border-indigo-600/10 hover:border-indigo-600 text-indigo-600 hover:text-white rounded-md">
                 Διαβάστε περισσότερα
             </a>
         </div>
     </div><!--end col-->
 
 </div>
-    )}
+    ))}

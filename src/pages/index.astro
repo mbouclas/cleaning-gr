@@ -47,10 +47,14 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
                         Επαγγελματικά
                          <span class="text-primary">σεμινάρια</span>  <span class="">καθαρισμών</span>
                     </h1>
-                    <p class="mt-5 text-lg font-semibold">
-                        Nisi nec a enim, velit potenti nunc interdum facilisis Pharetra integer viverra et scelerisque egestas.
+                    <p class="mt-5  font-semibold">
+                        Cleaning.gr  Ο πρώτος κόμβος για τον επαγγελματικό καθαρισμό στην Ελλάδα από το 1998. Δημιουργήθηκε για να αποτελέσει το σημείο αναφοράς για τους επαγγελματίες που προσφέρουν
+
+                        υπηρεσίες καθαρισμού, αλλά και τους χρήστες, όπως νοσοκομεία, ιδιώτες, εταιρίες, που χρησιμοποιούν τις υπηρεσίες. Σκοπός είναι η επιστημονική προσέγγιση στα διεθνή πρότυπα επαγγελματικού καθαρισμού
+
+                        και η κατάρτιση των επαγγελματιών.
                     </p>
-                    <button type="button" class="mt-5 btn-accent">Contact Us</button>
+                    <a href="/contact/" title="Επικοινωνήστε μαζί μας" class="mt-5 btn-accent">Επικοινωνήστε μαζί μας</a>
                 </div>
                 <div>
                     <img src="/lecture-theater.webp" decoding="async" width="500" height="300"
@@ -63,12 +67,13 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
 
     <div class="w-full px-4 lg:w-5/12">
         <div class="hero-content">
-            <h1 class="mb-5 text-4xl font-bold !leading-[1.208] text-dark  sm:text-[42px] lg:text-[40px] xl:text-5xl">
-                Επαγγελματικά σεμινάρια
-                καθαρισμών
-            </h1>
+            <h2 class="mb-5 text-4xl font-bold !leading-[1.208] text-dark  sm:text-[42px] lg:text-[40px] xl:text-5xl">
+                Σεμινάρια επαγγελματικού καθαρισμού
+            </h2>
             <p class="mb-8 max-w-[480px] text-base text-body-color ">
-                για εταιρίες και όχι μόνο
+                Από το 2002 το cleaning.gr διεξάγει σεμινάρια σε συνεργασία με αναγνωρισμένα διεθνή ινστιτούτα σε κλάδους όπως καθαρισμός κτηρίων, νοσοκομείων, υφασμάτινων επιφανειών (μοκετών, χαλιών, σαλονιών, στρωμάτων).
+
+                Εκατοντάδες επαγγελματίες έχουν πιστοποιηθεί από τότε αναβαθμίζοντας έτσι την τεχνική τους κατάρτιση αλλά και την εικόνα της εταιρίας τους.
             </p>
             <ul class="flex flex-wrap items-center">
                 <li>
@@ -126,34 +131,36 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
 </div>
 
 <main class="content">
-    <div class="container my-4">
-        <h3 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">Είπαν για εμάς</h3>
 
-        <div class="mx-auto grid max-w-2xl grid-cols-1 lg:mx-0 lg:max-w-none lg:grid-cols-2 gap-4">
-            {testimonials.map(item => (
-            <div class="flex flex-col pb-10 sm:pb-16 lg:pb-0 lg:pr-8 xl:pr-20">
-                <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">{item.company_name}</h3>
-                <figure class="mt-10 flex flex-auto flex-col justify-between">
-                    <blockquote class="text-lg leading-8 text-gray-900">
-                        <p>“{item.testimonial}”</p>
-                    </blockquote>
-                    <figcaption class="mt-10 flex items-center gap-x-6">
-                        <div class="text-base">
-                            <div class="font-semibold text-gray-900">{item.person_name}</div>
-                            <div class="mt-1 text-gray-500">{item.person_title}</div>
-                        </div>
-                    </figcaption>
-                </figure>
-            </div>
-            ))}
-        </div>
-    </div>
-
+    {Array.isArray(seminars) && seminars.length > 0 && (
     <section class="relative md:py-24 py-4 overflow-hidden  my-4">
 
         <FeaturedSeminars items={seminars}  />
 
     </section><!-- END FEATURED SEMINARS -->
+    )}
+    <div class="container my-4">
+        <h3 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">επαγγελματίες που παρακολούθησαν τα σεμινάρια είπαν για εμάς</h3>
+
+        <div class="mx-auto grid max-w-2xl grid-cols-1 lg:mx-0 lg:max-w-none lg:grid-cols-2 gap-4">
+            {testimonials.map(item => (
+                    <div class="flex flex-col pb-10 sm:pb-16 lg:pb-0 lg:pr-8 xl:pr-20">
+                        <h3 class="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">{item.company_name}</h3>
+                        <figure class="mt-10 flex flex-auto flex-col justify-between">
+                            <blockquote class="text-lg leading-8 text-gray-900">
+                                <p>“{item.testimonial}”</p>
+                            </blockquote>
+                            <figcaption class="mt-10 flex items-center gap-x-6">
+                                <div class="text-base">
+                                    <div class="font-semibold text-gray-900">{item.person_name}</div>
+                                    <div class="mt-1 text-gray-500">{item.person_title}</div>
+                                </div>
+                            </figcaption>
+                        </figure>
+                    </div>
+            ))}
+        </div>
+    </div>
 
     <div class="container relative my-4" id="Testimonials">
         <div class="grid md:grid-cols-12 grid-cols-1 items-center gap-[30px]">
@@ -175,13 +182,14 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
                 </div>
             </div>
 
+
             <div class="md:col-span-6">
                 <div class="lg:ms-5">
 
                     <h3 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">Πιστοποιημένοι Τεχνικοί</h3>
 
                     <p class="text-slate-400 max-w-xl mb-6">
-                        Some text on the matter
+                        Δείτε ποιες εταιρίες και τεχνικοί καθαρισμού έχουν πιστοποιηθεί από το Cleaning.gr και από τα συνεργαζόμενα διεθνή ινστιτούτα και επικοινωνήστε μαζί τους στην περιοχή σας.
                     </p>
 
                     <a href="/certified" class="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-indigo-600/5 hover:bg-indigo-600 border-indigo-600/10 hover:border-indigo-600 text-indigo-600 hover:text-white rounded-full">
@@ -192,15 +200,19 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
         </div>
     </div>
 
-
+    {Array.isArray(page.acf.featured_content) && page.acf.featured_content.length > 0 && (
     <section class="relative md:py-24 py-4 overflow-hidden bg-gray-100 my-4">
+
         <div class="container relative ">
+            <div class="lg:col-span-8 md:col-span-6 md:text-start text-center">
+                <h3 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">Εκδόσεις</h3>
+            </div>
             <FeaturedContent items={page.acf.featured_content}  />
         </div>
     </section><!-- END FEATURED CONTENT -->
+    )}
 
-
-
+    {Array.isArray(listings) && listings.length > 0 && (
     <div class="container relative md:mt-24 mt-16">
 
 
@@ -245,7 +257,7 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
             ))}
         </div>
     </div><!-- END LISTINGS -->
-
+    )}
     <section class="relative md:py-24 py-16 bg-gray-100 my-4">
         <div class="container relative ">
             <h3 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">Εγκυκλοπαίδεια Καθαρισμού</h3>

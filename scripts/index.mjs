@@ -46,13 +46,17 @@ Promise.all([
     saveMenus(),
     saveTaxonomies(),
     saveAcfGroups(),
-    saveAllContent(),
     saveOptionsPages(),
 ])
     .then(async () => {
-
-
-        // await new CarsService().postProcessing(cacheFolderLocation);
+        return Promise.all([
+            new BaseService().getMedia(cacheFolderLocation),
+        ]);
+    })
+    .then(async () => {
+        return Promise.all([
+            saveAllContent(),
+        ])
     })
     .then(() => {
     console.log(`* All done in ${Date.now() - timeStart}ms`);

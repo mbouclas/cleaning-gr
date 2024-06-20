@@ -42,6 +42,7 @@ const seo = {
     </ImgContainer>
 
     <Container>
+        <div class="my-4 prose leading:loose prose-bold  prose-a:text-accent max-w-none text-muted-50" set:html={page.content.rendered} />
         <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-[30px] my-4">
             {items.map((item) => (
                     <div class="group relative rounded-md shadow hover:shadow-lg dark:shadow-gray-800 duration-500 ease-in-out overflow-hidden">

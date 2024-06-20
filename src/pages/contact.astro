@@ -8,6 +8,7 @@ import Form from '@components/contact-form.svelte';
 import Container from '@components/container-with-shadow.astro';
 import ImgContainer from '@components/header-with-rounded-image.astro';
 import {cloudinaryRawSettings} from "../helpers/cloudinary.helper";
+import labels from '@data/labels/contact-form.json';
 
 const service = new BaseService();
 const fields = await service.load(`contact_form_fields`) as IAcfField[];
@@ -25,6 +26,7 @@ const seo = {
 const map = service.getAcfField('map', siteSettings);
 const phone = service.getAcfField('phone_number', siteSettings);
 const contact_form_text = service.getAcfField('contact_form_text', siteSettings);
+
 ---
 <Layout {seo}>
     <ImgContainer>
@@ -50,9 +52,7 @@ const contact_form_text = service.getAcfField('contact_form_text', siteSettings)
     </ImgContainer>
     <div class="w-full max-w-7xl mx-auto px-4">
         <div class="my-6">
-            <h1 class="font-sans text-2xl lg:text-3xl text-muted-800 dark:text-white">
-                Contact Us
-            </h1>
+
             <p class="my-4">{contact_form_text.value}</p>
 
         </div>
@@ -66,15 +66,12 @@ const contact_form_text = service.getAcfField('contact_form_text', siteSettings)
             </p>
 
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 mt-6">
-            <div class="lg:col-span-8">
-                <Form {fields} client:only="svelte" />
+
+        <div class=" mt-6">
+            <div class="w-full">
+                <Form {fields} client:only="svelte" {labels} />
             </div>
-            <div class="lg:col-span-4">
-                {map.value && (
-                        <div set:html={map.value} class="h-96 w-full" />
-                )}
-            </div>
+
         </div>
     </div>
 </Layout>

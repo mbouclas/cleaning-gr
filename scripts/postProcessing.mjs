@@ -1,5 +1,9 @@
 import {readFile} from "fs/promises";
 import {join} from "path";
+import {
+    writeMdxFileFromShortcodesArray
+} from "./shortcodes.helper.mjs";
+
 
 export class PostProcessing {
     cacheFolderLocation;
@@ -36,10 +40,7 @@ export class PostProcessing {
         const images = [];
 
         for (const id of ids) {
-/*            if (id === 220) {
-                console.log(all.find(image => image.id === id))
-            }*/
-            images.push(all.find(image => image.id === id));
+            images.push(all.find(image => image.id === parseInt(id)));
         }
 
         return images;
@@ -63,5 +64,11 @@ export class PostProcessing {
 
 
         return menus;
+    }
+
+    async parseShortcodes(slug, html) {
+
+        await writeMdxFileFromShortcodesArray(html, slug, true);
+
     }
 }
