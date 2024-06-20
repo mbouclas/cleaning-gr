@@ -6,8 +6,7 @@ export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
 		fontFamily: {
-			sans: ['Roboto', ...defaultTheme.fontFamily.sans],
-			'roboto': ['"Roboto", roboto'],
+			sans: ['Open Sans Variable', ...defaultTheme.fontFamily.sans],
 			'open': ['"Open Sans Variable", sans-serif'],
 
 
