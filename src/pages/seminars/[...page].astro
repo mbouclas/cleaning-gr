@@ -77,9 +77,9 @@ const showFuture = (currentPage === 1 || !currentPage);
 
     <Container title={page.title.rendered}>
         <div class="my-4" set:html={page.content.rendered}></div>
-
+        <h2 class="font-light text-[34px] tracking-[1px] leading-[54px] mb-2">Μελλοντικά Σεμινάρια</h2>
         {futureItems.length > 0  && showFuture &&  (
-            <h2 class="font-light text-[34px] tracking-[1px] leading-[54px] mb-2">Μελλοντικά Σεμινάρια</h2>
+
                 <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-[30px] my-4">
                     {futureItems.map((item) => (
                             <div class="group relative rounded-md shadow hover:shadow-lg dark:shadow-gray-800 duration-500 ease-in-out overflow-hidden">
@@ -107,6 +107,11 @@ const showFuture = (currentPage === 1 || !currentPage);
 
                     ))}
                 </div>
+        )}
+        {futureItems.length === 0 && (
+        <div>
+            Τα νέα σεμινάρια προγραμματίζονται 2 μήνες πριν τη διεξαγωγή τους. Για να ενημερωθείτε για το επόμενο σεμινάριο, συμπληρώστε τα στοιχεία σας στη φόρμα επικοινωνίας (εταιρία, ονοματεπώνυμο, τηλέφωνο, email). Αν δεν υπάρχουν τα στοιχεία σας στη βάση μας, δεν θα μπορέσετε να σας ενημερωθείτε εγκαίρως για το επόμενο σεμινάριο.
+        </div>
         )}
 
         <h2 class="font-light text-[34px] tracking-[1px] leading-[54px] my-4">Προηγούμενα Σεμινάρια</h2>
