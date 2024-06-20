@@ -188,7 +188,7 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
 
                     <h3 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">Πιστοποιημένοι Τεχνικοί</h3>
 
-                    <p class="text-slate-400 max-w-xl mb-6">
+                    <p class=" max-w-xl mb-6">
                         Δείτε ποιες εταιρίες και τεχνικοί καθαρισμού έχουν πιστοποιηθεί από το Cleaning.gr και από τα συνεργαζόμενα διεθνή ινστιτούτα και επικοινωνήστε μαζί τους στην περιοχή σας.
                     </p>
 
@@ -222,7 +222,7 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
             </div>
 
             <div class="lg:col-span-4 md:col-span-6 md:text-end hidden md:block">
-                <a href="/listings" class="inline-flex relative gap-2 font-semibold tracking-wide align-middle text-base text-center border-none after:content-[''] after:absolute after:h-px after:w-0 hover:after:w-full after:end-0 hover:after:end-auto after:bottom-0 after:start-0 after:duration-500 text-slate-400 hover:text-indigo-600 after:bg-indigo-600 duration-500 ease-in-out">
+                <a href="/listings" class="inline-flex relative gap-2 font-semibold tracking-wide align-middle text-base text-center border-none after:content-[''] after:absolute after:h-px after:w-0 hover:after:w-full after:end-0 hover:after:end-auto after:bottom-0 after:start-0 after:duration-500  hover:text-indigo-600 after:bg-indigo-600 duration-500 ease-in-out">
                     Όλες οι Αγγελίες
 
                     <ArrowRightIcon classes="w-6 h-6"></ArrowRightIcon>
@@ -243,7 +243,7 @@ const certificationsPage = await service.getPostObjectByProperty('page', 'acf.te
                                 <a href={`/listing/${item.slug}`} class="title h5 underline-animation text-lg font-medium hover:text-indigo-600 duration-500 ease-in-out">
                                     {item.title.rendered}</a>
                                 <div class="my-auto">
-                                    <p class="text-slate-400 mt-3">{item.acf.short_description}</p>
+                                    <p class=" mt-3">{item.acf.short_description}</p>
                                 </div>
 
                                 <div class="mt-4">

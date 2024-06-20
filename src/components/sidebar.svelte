@@ -11,7 +11,7 @@
         show = !show;
     }
 </script>
-<button on:click={toggle} class="flex gap-2.5 my-4">
+<button on:click={toggle} class="flex gap-2.5 my-4" title="Menu">
     <slot name="button">Toggle</slot>
 </button>
 {#if show}

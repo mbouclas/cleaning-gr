@@ -127,7 +127,7 @@ if (item.acf.for_paid && Array.isArray(item.acf.for_paid.gallery)) {
 
                         <div class="content mt-6 text-center">
                             <a href={`/certification/${cert.slug}`} title={cert.name} class="text-xl font-semibold hover:text-indigo-600 duration-500 ease-in-out">{cert.name}</a>
-                            <p class="text-slate-400 mt-4">
+                            <p class=" mt-4">
                                 <a href={`/certification/${cert.slug}`} title={cert.name} class="inline-flex justify-center text-center">
                                     <Fragment set:html={svgIcon(cert.acf.icon, 'h-32 w-32')}></Fragment>
                                 </a>

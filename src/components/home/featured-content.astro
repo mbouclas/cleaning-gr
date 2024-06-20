@@ -44,7 +44,7 @@ for (const postType of new Set(postTypes)) {
 
             <h4 class="mb-4 md:text-3xl md:leading-normal text-2xl leading-normal font-semibold">{item.title.rendered}</h4>
             {item.acf?.short_description && (
-            <p class="text-slate-400 max-w-xl mb-6">{item.acf?.short_description}</p>
+            <p class="max-w-xl mb-6">{item.acf?.short_description}</p>
             )}
             <a href={`/${item.type}/${item.slug}`} class="py-2 px-5 inline-block font-semibold tracking-wide border align-middle duration-500 text-base text-center bg-indigo-600/5 hover:bg-indigo-600 border-indigo-600/10 hover:border-indigo-600 text-indigo-600 hover:text-white rounded-md">
                 Διαβάστε περισσότερα
